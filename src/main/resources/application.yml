@@ -1,0 +1,10 @@
+## YAML Template.
+---
+spring:
+   data:
+      cassandra:
+         keyspaceName: pocga
+         contactpoints: localhost
+         port: 9042
+         username: admin
+         password: password
