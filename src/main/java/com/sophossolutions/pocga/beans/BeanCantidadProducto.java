@@ -2,17 +2,18 @@ package com.sophossolutions.pocga.beans;
 
 import com.sophossolutions.pocga.rest.ConsumirCatalogoApi;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 /**
  * Bean para almacenar el producto y la cantidad
  * @author Ricardo José Ramírez Blauvelt
  */
-public class BeanCantidadProducto {
+public class BeanCantidadProducto implements Comparable<BeanCantidadProducto> {
 	
 	private BeanDetallesProducto producto;
 	private int cantidad;
@@ -75,14 +76,14 @@ public class BeanCantidadProducto {
 	 * @return 
 	 */
 	public static List<BeanCantidadProducto> fromMapProductos(Map<Integer, Integer> productos) {
-		final List<BeanCantidadProducto> listaProductos = new ArrayList<>();
+		final Set<BeanCantidadProducto> listaProductos = new TreeSet<>();
 		productos.forEach((producto, cantidad) -> {
 			final BeanCantidadProducto bcp = new BeanCantidadProducto();
 			bcp.setCantidad(cantidad);
 			bcp.setProducto(ConsumirCatalogoApi.getProducto(producto));
 			listaProductos.add(bcp);
 		});
-		return listaProductos;
+		return new ArrayList<>(listaProductos);
 	}
 	
 	/**
@@ -108,10 +109,14 @@ public class BeanCantidadProducto {
 			.collect(
 				Collectors.toMap(
 					bcp -> bcp.getProducto().getIdProducto(), 
-					bcp -> bcp.getCantidad()
+					BeanCantidadProducto::getCantidad
 				)
 			)
 		;
+	}
+
+	@Override public int compareTo(BeanCantidadProducto o) {
+		return this.getProducto().getIdProducto() - o.getProducto().getIdProducto();
 	}
 
 }

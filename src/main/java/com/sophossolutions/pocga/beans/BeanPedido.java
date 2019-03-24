@@ -1,5 +1,6 @@
 package com.sophossolutions.pocga.beans;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sophossolutions.pocga.cassandra.entity.PedidosEntity;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,6 +20,7 @@ public class BeanPedido implements Comparable<BeanPedido> {
 	private String direccionDestinatario;
 	private String ciudadDestinatario;
 	private String telefonoDestinatario;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
 	private LocalDateTime fecha;
 
 	public BeanPedido() {
@@ -56,7 +58,7 @@ public class BeanPedido implements Comparable<BeanPedido> {
 			return false;
 		}
 		final BeanPedido other = (BeanPedido) obj;
-		return this.idPedido == other.idPedido;
+		return Objects.equals(this.idPedido, other.idPedido);
 	}
 
 	public UUID getIdPedido() {

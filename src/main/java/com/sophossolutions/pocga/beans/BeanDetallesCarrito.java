@@ -51,10 +51,7 @@ public class BeanDetallesCarrito {
 		if (!Objects.equals(this.productos, other.productos)) {
 			return false;
 		}
-		if (!Objects.equals(this.totales, other.totales)) {
-			return false;
-		}
-		return true;
+		return Objects.equals(this.totales, other.totales);
 	}
 
 	public String getIdUsuario() {

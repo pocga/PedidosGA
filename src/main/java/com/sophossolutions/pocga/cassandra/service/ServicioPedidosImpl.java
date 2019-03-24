@@ -36,7 +36,7 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 		// Consulta todos los pedidos
 		final Iterable<PedidosEntity> entidades = repository.findAll();
 		if(!entidades.iterator().hasNext()) {
-			return null;
+			return List.of();
 		}
 		
 		// Crea la lista
@@ -53,7 +53,7 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 	@Override public BeanPedido getPedido(UUID idPedido) {
 		// Consulta la entidad
 		final Optional<PedidosEntity> entity = repository.findById(idPedido);
-		if(entity.isEmpty()) {
+		if(!entity.isPresent()) {
 			return null;
 		}
 		
@@ -65,18 +65,18 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 		// Filtra los pedidos por usuario
 		final Iterable<PedidosEntity> entidades = repository.findAllByIdUsuario(idUsuario);
 		if(!entidades.iterator().hasNext()) {
-			return null;
+			return List.of();
 		}
 		
 		// Crea la lista
-		final List<BeanPedido> listaPedidos = new ArrayList<>();
-		for (PedidosEntity pe : entidades) {
+		final Set<BeanPedido> listaPedidos = new TreeSet<>();
+		for(PedidosEntity pe : entidades) {
 			// Carga el pedido
 			listaPedidos.add(BeanPedido.fromEntity(pe));
 		}
-
-		// Entrega todos los pedidos
-		return listaPedidos;
+		
+		// Entrega todos los pedidos (se trabaja con TreeSet para que lo ordene cronológicamente)
+		return new ArrayList<>(listaPedidos);
 	}
 
 	@Override public BeanPedido crearPedido(BeanPedido pedido) {
@@ -86,8 +86,8 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 		}
 		
 		// Ya existe
-		if(repository.existsById(pedido.getIdPedido())) {
-			throw new IllegalArgumentException("El ID de pedido {" + pedido.getIdPedido()  + "} ya existe");
+		if(pedido.getIdPedido() != null && repository.existsById(pedido.getIdPedido())) {
+			throw new IllegalArgumentException("El ID de pedido {" + pedido.getIdPedido()  + "} ya existe y no se puede crear de nuevo");
 		}
 
 		// Crea la entidad
@@ -101,7 +101,7 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 		entity.setDireccionDestinatario(pedido.getDireccionDestinatario());
 		entity.setCiudadDestinatario(pedido.getCiudadDestinatario());
 		entity.setTelefonoDestinatario(pedido.getTelefonoDestinatario());
-		entity.setFecha(LocalDateTime.now());
+		entity.setFecha(pedido.getFecha() != null ? pedido.getFecha() : LocalDateTime.now());
 		
 		// Registra la entidad
 		final PedidosEntity newEntity = repository.save(entity);
@@ -117,7 +117,7 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 		if(repository.existsById(idPedido)) {
 			repository.deleteById(idPedido);
 		} else {
-			throw new IllegalArgumentException("El ID de pedido {" + idPedido  + "} no existe");
+			throw new IllegalArgumentException("El ID de pedido {" + idPedido  + "} no existe y por tanto, no fue necesario eliminarlo");
 		}
 	}
 

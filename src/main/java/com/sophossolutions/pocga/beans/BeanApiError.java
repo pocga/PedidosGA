@@ -1,17 +1,21 @@
 package com.sophossolutions.pocga.beans;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
  * Bean de respuesta cuando hay errores
  * @author Ricardo José Ramírez Blauvelt
  */
-public class BeanApiError
-{
-    public String codigoRespuesta;
-    public String descripcionRespuesta;
-    public String linkDocumentacionError;
-    public String detallesCausaError;
+public class BeanApiError {
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+	private final LocalDateTime timestamp = LocalDateTime.now();
+	private String codigoRespuesta;
+    private String descripcionRespuesta;
+    private String linkDocumentacionError;
+    private String detallesCausaError;
 
 	public BeanApiError() {
 	}
@@ -24,7 +28,7 @@ public class BeanApiError
 	}
 
 	@Override public String toString() {
-		return "ApiErrorRest{" + "codigoRespuesta=" + codigoRespuesta + ", descripcionRespuesta=" + descripcionRespuesta + ", linkDocumentacionError=" + linkDocumentacionError + ", detallesCausaError=" + detallesCausaError + '}';
+		return "BeanApiError{" + "timestamp=" + timestamp + ", codigoRespuesta=" + codigoRespuesta + ", descripcionRespuesta=" + descripcionRespuesta + ", linkDocumentacionError=" + linkDocumentacionError + ", detallesCausaError=" + detallesCausaError + '}';
 	}
 
 	@Override public int hashCode() {
@@ -81,6 +85,10 @@ public class BeanApiError
 
 	public void setDetallesCausaError(String detallesCausaError) {
 		this.detallesCausaError = detallesCausaError;
+	}
+
+	public LocalDateTime getTimestamp() {
+		return timestamp;
 	}
 
 }

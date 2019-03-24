@@ -1,13 +1,21 @@
 plugins {
 	id 'org.springframework.boot' version '2.1.3.RELEASE'
 	id 'java'
+	id 'org.sonarqube' version '2.7'
+	id 'jacoco'
 }
 
 apply plugin: 'io.spring.dependency-management'
 
 group = 'com.sophossolutions.pocga'
+description = 'API de Pedidos para la PoC Digital de Grupo Aval, con Spring Boot, Cassandra, Docker y Jenkins'
 version = '1.0'
 sourceCompatibility = '11'
+
+tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
+	options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+}
 
 // Ejecutar y depurar sin 'application' plugin en Netbeans
 if (!hasProperty('mainClass')) {
@@ -30,7 +38,31 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	
+	compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+sonarqube {
+    properties {
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.login", "8622f6ea13f3f32caaf5fa59d7162191f3e4fef6"
+        property "sonar.organization", "pocga-github"
+        property "sonar.scm.disabled", "True"
+    }
+}
+
+// JaCoCo
+jacocoTestReport {
+    reports {
+        html.enabled = true
+        xml.enabled = true
+        csv.enabled = false
+    }
+}
+jacoco {
+    reportsDir = file("$buildDir/jacoco")
 }

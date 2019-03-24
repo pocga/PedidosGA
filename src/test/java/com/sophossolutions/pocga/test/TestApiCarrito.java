@@ -22,6 +22,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
+/**
+ * Pruebas unitarias de la API de Carrito
+ * @author Ricardo José Ramírez Blauvelt
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Import(RestTemplateConfiguration.class)
@@ -52,28 +56,28 @@ public class TestApiCarrito {
 
 		// Adiciona un producto
 		adicionarProducto(producto1);
-		carritoEsperado.getProductos().add(getBeanCantidadProductoFromProducto(producto1));
+		carritoEsperado.getProductos().add(BeanCantidadProducto.fromBeanProducto(producto1));
 		carritoEsperado.setTotales(new BeanTotales(10, 32998900));
 		validarCarrito(carritoEsperado, "Adición producto 1");
 		
 		// Adiciona otro producto
 		adicionarProducto(producto2);
 		adicionarProducto(producto3);
-		carritoEsperado.getProductos().add(getBeanCantidadProductoFromProducto(producto2));
-		carritoEsperado.getProductos().add(getBeanCantidadProductoFromProducto(producto3));
+		carritoEsperado.getProductos().add(BeanCantidadProducto.fromBeanProducto(producto2));
+		carritoEsperado.getProductos().add(BeanCantidadProducto.fromBeanProducto(producto3));
 		carritoEsperado.setTotales(new BeanTotales(16, 53998150));
 		validarCarrito(carritoEsperado, "Adición de producto 2 y 3");
 		
 		// Actualiza la cantidad del producto 1 a 8
 		producto1.setCantidadPedida(8);
-		carritoEsperado.getProductos().set(0, getBeanCantidadProductoFromProducto(producto1));
+		carritoEsperado.getProductos().set(0, BeanCantidadProducto.fromBeanProducto(producto1));
 		actualizarProductoBodyFull(producto1);
 		carritoEsperado.setTotales(new BeanTotales(14, 47398370));
 		validarCarrito(carritoEsperado, "Actualización de cantidad producto 1 a 8");
 		
 		// Actualiza la cantidad del producto 2 a 1
 		producto2.setCantidadPedida(1);
-		carritoEsperado.getProductos().set(1, getBeanCantidadProductoFromProducto(producto2));
+		carritoEsperado.getProductos().set(1, BeanCantidadProducto.fromBeanProducto(producto2));
 		carritoEsperado.setTotales(new BeanTotales(10, 32998810));
 		actualizarProductoBodyCantidad(producto2);
 		validarCarrito(carritoEsperado, "Actualización de cantidad producto 2");
@@ -187,10 +191,4 @@ public class TestApiCarrito {
 		);
 	}
 
-	private BeanCantidadProducto getBeanCantidadProductoFromProducto(BeanProducto producto) {
-		final BeanCantidadProducto bcp = new BeanCantidadProducto();
-		bcp.setCantidad(producto.getCantidadPedida());
-		bcp.setProducto(ConsumirCatalogoApi.getProducto(producto.getIdProducto()));
-		return bcp;
-	}
 }
