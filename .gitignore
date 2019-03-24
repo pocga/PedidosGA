@@ -20,7 +20,7 @@ HELP.md
 /out/
 
 ### NetBeans ###
-/nbproject/private/
+/nbproject/
 /nbbuild/
 /dist/
 /nbdist/

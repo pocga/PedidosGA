@@ -61,7 +61,7 @@ public class ServicioCarritoImpl implements ServicioCarrito {
 		// Trae todos los productos en el carrito
 		final BeanDetallesCarrito detalles = getCarrito(idUsuario);
 		if(detalles == null) {
-			return null;
+			return new BeanTotales(0, 0);
 		}
 		
 		// Calcula los totales

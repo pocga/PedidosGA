@@ -30,7 +30,7 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 	private PedidosRepository repository;
 	
 	@Autowired
-	private ServicioCarritoImpl servicioCarrito;
+	private ServicioCarrito servicioCarrito;
 
 	@Override public List<BeanPedido> getPedidos() {
 		// Consulta todos los pedidos

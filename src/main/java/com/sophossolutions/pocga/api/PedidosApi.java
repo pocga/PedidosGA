@@ -99,7 +99,7 @@ public class PedidosApi {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		} catch (IllegalArgumentException iae) {
 			LOGGER.error("No se encontró un pedido con el ID: {} -> {}", idPedido, HttpStatus.NOT_FOUND);
-			throw new ErrorEntidadNoEncontrada(iae.getLocalizedMessage());
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 

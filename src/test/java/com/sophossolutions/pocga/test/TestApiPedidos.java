@@ -1,8 +1,11 @@
 package com.sophossolutions.pocga.test;
 
 import com.datastax.driver.core.utils.UUIDs;
+import com.sophossolutions.pocga.beans.BeanApiError;
 import com.sophossolutions.pocga.beans.BeanCantidadProducto;
 import com.sophossolutions.pocga.beans.BeanPedido;
+import com.sophossolutions.pocga.beans.BeanProducto;
+import com.sophossolutions.pocga.beans.BeanTotales;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -58,11 +61,15 @@ public class TestApiPedidos {
 
 	@Test
 	public void testOperacionesPedidos() {
+		// Simula el carrito
+		final BeanProducto producto1 = new BeanProducto(1, 10);
+		testRestTemplate.postForLocation("/carrito/" + ID_USUARIO + "/productos", producto1);
+
 		// Crea un pedido
 		final BeanPedido pedidoEsperado1 = new BeanPedido();
 		pedidoEsperado1.setIdPedido(ID_PEDIDO);
 		pedidoEsperado1.setIdUsuario(ID_USUARIO);
-		pedidoEsperado1.setProductos(BeanCantidadProducto.fromMapProductos(Map.of(1, 3, 2, 1, 3, 1)));
+		pedidoEsperado1.setProductos(List.of(BeanCantidadProducto.fromBeanProducto(producto1)));
 		pedidoEsperado1.setFecha(LocalDateTime.now());
 		pedidoEsperado1.setNombreDestinatario("Ricardo");
 		pedidoEsperado1.setDireccionDestinatario("CL 48 20 34 OF 1009");
@@ -70,6 +77,10 @@ public class TestApiPedidos {
 		pedidoEsperado1.setTelefonoDestinatario("+574 605 1010");
 		crearPedido(pedidoEsperado1);
 		validarPedidos(List.of(pedidoEsperado1), "Adición del pedido 1");
+		
+		// Validar que el carrito ya no tenga productos
+		final BeanTotales totales = testRestTemplate.getForObject("/carrito/" + ID_USUARIO + "/productos/totales", BeanTotales.class);
+		Assert.assertEquals("El carrito del usuario no quedó vacío", 0, totales.getTotalCantidad());
 
 		// Adiciona otro pedido
 		final BeanPedido pedidoEsperado2 = new BeanPedido();
@@ -99,6 +110,45 @@ public class TestApiPedidos {
 			1, 
 			listaPedidosReal.stream().filter(bp -> bp.getIdUsuario().equals(ID_USUARIO)).collect(Collectors.toList()).size()
 		);
+	}
+	
+	@Test
+	public void testExcepcionesPedidos() {
+		// Consultar pedido inexistente
+		final ResponseEntity<String> error1 = testRestTemplate.exchange(
+				MODULO + UUIDs.timeBased(),
+				HttpMethod.GET,
+				HttpEntity.EMPTY,
+				String.class
+		);
+		System.out.println(error1);
+		Assert.assertEquals("Error buscando pedido inexistente", HttpStatus.NOT_FOUND.value(), error1.getStatusCodeValue());
+		
+		// Crear pedido sin cuerpo
+		final ResponseEntity<BeanApiError> error2 = testRestTemplate.postForEntity(MODULO, (BeanPedido)null, BeanApiError.class);
+		Assert.assertEquals("Error creando pedido sin cuerpo", HttpStatus.UNSUPPORTED_MEDIA_TYPE.value(), error2.getStatusCodeValue());
+		
+		// Crea un pedido
+		final BeanPedido pedido1 = new BeanPedido();
+		pedido1.setIdPedido(UUIDs.timeBased());
+		pedido1.setIdUsuario(UUID.randomUUID().toString());
+		pedido1.setProductos(BeanCantidadProducto.fromMapProductos(Map.of(1, 1)));
+		crearPedido(pedido1);
+
+		// Intenta crear otro con el mismo ID
+		final BeanPedido pedido2 = new BeanPedido();
+		pedido2.setIdPedido(pedido1.getIdPedido());
+		pedido2.setIdUsuario(pedido1.getIdUsuario());
+		pedido2.setProductos(BeanCantidadProducto.fromMapProductos(Map.of(2, 2)));
+		final ResponseEntity<BeanApiError> error3 = testRestTemplate.postForEntity(MODULO, pedido2, BeanApiError.class);
+		Assert.assertEquals("Error duplicando pedido", HttpStatus.UNPROCESSABLE_ENTITY.value(), error3.getStatusCodeValue());
+		
+		// Intenta borrar un pedido inexistente
+		final ResponseEntity<HttpStatus> error4 = testRestTemplate.exchange(MODULO + UUIDs.timeBased(), HttpMethod.DELETE, HttpEntity.EMPTY, HttpStatus.class);
+		Assert.assertEquals("Error borrando pedido inexistente", HttpStatus.NOT_FOUND.value(), error4.getStatusCodeValue());
+		
+		// Limpia
+		testRestTemplate.delete(MODULO + pedido1.getIdPedido());
 	}
 	
 	private void validarPedidos(List<BeanPedido> pedidosEsperados, String operacion) {
