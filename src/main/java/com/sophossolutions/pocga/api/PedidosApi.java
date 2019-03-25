@@ -6,7 +6,6 @@ import com.sophossolutions.pocga.api.exceptions.ErrorListadoEntidadesVacio;
 import com.sophossolutions.pocga.beans.BeanPedido;
 import com.sophossolutions.pocga.cassandra.service.ServicioPedidos;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/pedidos")
 public class PedidosApi {
 
+	/** Logger de eventos */
 	private static final Logger LOGGER = LoggerFactory.getLogger(PedidosApi.class);
 	
 	@Autowired
@@ -37,7 +37,7 @@ public class PedidosApi {
 	@GetMapping("")
 	public ResponseEntity<List<BeanPedido>> getPedidos() {
 		final List<BeanPedido> listaPedidos = servicio.getPedidos();
-		if(listaPedidos != null) {
+		if(!listaPedidos.isEmpty()) {
 			LOGGER.info("Consulta de todos los pedidos ({}) exitosa", listaPedidos.size());
 			return new ResponseEntity<>(listaPedidos, HttpStatus.OK);
 		} else {
@@ -74,20 +74,14 @@ public class PedidosApi {
 
 	@PostMapping("")
 	public ResponseEntity<BeanPedido> addPedido(@RequestBody BeanPedido pedido) {
-		// Control
-		if(Objects.isNull(pedido)) {
-			LOGGER.error("No especificó el pedido a crear -> {}", HttpStatus.BAD_REQUEST);
-			throw new IllegalArgumentException("No especificó el pedido a crear");
-		}
-
 		// Lo busca
 		try {
 			final BeanPedido pedidoCreado = servicio.crearPedido(pedido);
 			LOGGER.info("Creación del pedido '{}' exitosa", pedidoCreado.getIdPedido());
 			return new ResponseEntity<>(pedidoCreado, HttpStatus.CREATED);
-		} catch (IllegalArgumentException iae) {
+		} catch (ErrorCreandoEntidad ece) {
 			LOGGER.error("No se pudo crear el pedido, pues ya existe un pedido con el ID: {} -> {}", pedido.getIdPedido(), HttpStatus.UNPROCESSABLE_ENTITY);
-			throw new ErrorCreandoEntidad(iae.getLocalizedMessage());
+			throw ece;
 		}
 	}
 	

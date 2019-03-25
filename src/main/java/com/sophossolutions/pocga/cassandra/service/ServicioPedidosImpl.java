@@ -1,6 +1,7 @@
 package com.sophossolutions.pocga.cassandra.service;
 
 import com.datastax.driver.core.utils.UUIDs;
+import com.sophossolutions.pocga.api.exceptions.ErrorCreandoEntidad;
 import com.sophossolutions.pocga.beans.BeanCantidadProducto;
 import com.sophossolutions.pocga.beans.BeanPedido;
 import com.sophossolutions.pocga.cassandra.entity.PedidosEntity;
@@ -80,14 +81,9 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 	}
 
 	@Override public BeanPedido crearPedido(BeanPedido pedido) {
-		// Control
-		if(pedido == null) {
-			return null;
-		}
-		
 		// Ya existe
 		if(pedido.getIdPedido() != null && repository.existsById(pedido.getIdPedido())) {
-			throw new IllegalArgumentException("El ID de pedido {" + pedido.getIdPedido()  + "} ya existe y no se puede crear de nuevo");
+			throw new ErrorCreandoEntidad("El ID de pedido {" + pedido.getIdPedido()  + "} ya existe y no se puede crear de nuevo");
 		}
 
 		// Crea la entidad
@@ -107,7 +103,11 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 		final PedidosEntity newEntity = repository.save(entity);
 		
 		// Elimina el carrito del usuario
-		servicioCarrito.eliminarCarrito(pedido.getIdUsuario());
+		try {
+			servicioCarrito.eliminarCarrito(pedido.getIdUsuario());
+		} catch (RuntimeException re) {
+			LOGGER.warn("Error eliminando el carrito: {}", re.getLocalizedMessage());
+		}
 		
 		// Entrega el ID generado
 		return BeanPedido.fromEntity(newEntity);

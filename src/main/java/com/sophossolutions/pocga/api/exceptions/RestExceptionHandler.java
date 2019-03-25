@@ -21,19 +21,25 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(ErrorEntidadNoEncontrada.class)
-	public ResponseEntity<BeanApiError> handleEntidadNoEncontrada(ErrorEntidadNoEncontrada ex, WebRequest request) {
+	public ResponseEntity<BeanApiError> handleErrorEntidadNoEncontrada(ErrorEntidadNoEncontrada ex, WebRequest request) {
 		final HttpStatus responseStatus = HttpStatus.NOT_FOUND;
 		return ResponseEntity.status(responseStatus).body(crearObjetoError(ex, request, responseStatus));
 	}
 	
 	@ExceptionHandler(ErrorListadoEntidadesVacio.class)
-	public ResponseEntity<BeanApiError> handleListadoEntidadesVacio(ErrorListadoEntidadesVacio ex, WebRequest request) {
+	public ResponseEntity<BeanApiError> handleErrorListadoEntidadesVacio(ErrorListadoEntidadesVacio ex, WebRequest request) {
 		final HttpStatus responseStatus = HttpStatus.NOT_FOUND;
 		return ResponseEntity.status(responseStatus).body(crearObjetoError(ex, request, responseStatus));
 	}
 	
 	@ExceptionHandler(ErrorCreandoEntidad.class)
 	public ResponseEntity<BeanApiError> handleErrorCreandoEntidad(ErrorCreandoEntidad ex, WebRequest request) {
+		final HttpStatus responseStatus = HttpStatus.UNPROCESSABLE_ENTITY;
+		return ResponseEntity.status(responseStatus).body(crearObjetoError(ex, request, responseStatus));
+	}
+	
+	@ExceptionHandler(ErrorActualizandoEntidad.class)
+	public ResponseEntity<BeanApiError> handleErrorActualizandoEntidad(ErrorActualizandoEntidad ex, WebRequest request) {
 		final HttpStatus responseStatus = HttpStatus.UNPROCESSABLE_ENTITY;
 		return ResponseEntity.status(responseStatus).body(crearObjetoError(ex, request, responseStatus));
 	}

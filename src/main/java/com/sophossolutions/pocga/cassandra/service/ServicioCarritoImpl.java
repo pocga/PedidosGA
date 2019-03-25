@@ -1,16 +1,18 @@
 package com.sophossolutions.pocga.cassandra.service;
 
+import com.sophossolutions.pocga.api.exceptions.ErrorActualizandoEntidad;
+import com.sophossolutions.pocga.api.exceptions.ErrorCreandoEntidad;
+import com.sophossolutions.pocga.api.exceptions.ErrorEntidadNoEncontrada;
 import com.sophossolutions.pocga.beans.BeanCantidadProducto;
 import com.sophossolutions.pocga.beans.BeanDetallesCarrito;
+import com.sophossolutions.pocga.beans.BeanDetallesProducto;
 import com.sophossolutions.pocga.beans.BeanProducto;
 import com.sophossolutions.pocga.beans.BeanTotales;
 import com.sophossolutions.pocga.cassandra.entity.CarritoEntity;
 import com.sophossolutions.pocga.cassandra.repository.CarritoRepository;
 import com.sophossolutions.pocga.rest.ConsumirCatalogoApi;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +47,11 @@ public class ServicioCarritoImpl implements ServicioCarrito {
 		entity.getProductos().forEach((producto, cantidad) -> {
 			final BeanCantidadProducto bcp = new BeanCantidadProducto();
 			bcp.setCantidad(cantidad);
-			bcp.setProducto(ConsumirCatalogoApi.getProducto(producto));
+			final BeanDetallesProducto detallesProducto = ConsumirCatalogoApi.getProducto(producto);
+			if(detallesProducto == null) {
+				throw new ErrorEntidadNoEncontrada("El producto {" + producto + "} no existe en el catálogo");
+			}
+			bcp.setProducto(detallesProducto);
 			listaProductos.add(bcp);
 		});
 		
@@ -86,18 +92,35 @@ public class ServicioCarritoImpl implements ServicioCarrito {
 	}
 
 	@Override public BeanTotales adicionarProducto(String idUsuario, BeanProducto producto) {
+		// Valida la cantidad
+		if(producto.getCantidad() < 1) {
+			throw new ErrorCreandoEntidad("No se puede adicionar un producto con cantidad inferior a 1");
+		}
+
+		// Valida la existencia del producto
+		if(!isProductoEnCatalogo(producto.getIdProducto())) {
+			throw new ErrorEntidadNoEncontrada("El producto {" + producto.getIdProducto() + "} no está registrado en el sistema");
+		}
+
 		// Consulta el carrito
 		final Optional<CarritoEntity> optional = repository.findById(idUsuario);
 		
-		// ¿No tiene productos?
+		// Determina si se crea el carrito o se adiciona un producto
 		if(!optional.isPresent()) {
-			final Map<Integer, Integer> mapaProducto = new HashMap<>();
-			mapaProducto.put(producto.getIdProducto(), producto.getCantidadPedida());
-			final CarritoEntity nuevo = new CarritoEntity(idUsuario, mapaProducto);
+			// Se crea el carrito
+			final CarritoEntity nuevo = new CarritoEntity(idUsuario, BeanProducto.toMap(producto));
 			repository.save(nuevo);
 		} else {
+			// Se actualiza el carrito
 			final CarritoEntity actualizar = optional.get();
-			actualizar.getProductos().put(producto.getIdProducto(), producto.getCantidadPedida());
+			if(actualizar.getProductos().containsKey(producto.getIdProducto())) {
+				actualizar.getProductos().compute(
+					producto.getIdProducto(), 
+					(productoActual, cantidadActual) -> cantidadActual + producto.getCantidad()
+				);
+			} else {
+				actualizar.getProductos().put(producto.getIdProducto(), producto.getCantidad());
+			}
 			repository.save(actualizar);
 		}
 		
@@ -106,8 +129,23 @@ public class ServicioCarritoImpl implements ServicioCarrito {
 	}
 
 	@Override public BeanTotales actualizarProducto(String idUsuario, BeanProducto producto) {
+		// Valida la cantidad
+		if(producto.getCantidad() < 0) {
+			throw new ErrorActualizandoEntidad("No se puede actualizar un producto con cantidades negativas");
+		}
+		
+		// Valida si el carrito existe
+		if(!repository.existsById(idUsuario)) {
+			throw new ErrorEntidadNoEncontrada("No existe el carrito de compras del usuario {" + idUsuario +"}");
+		}
+		
+		// Valida la existencia del producto
+		if(!isProductoEnCatalogo(producto.getIdProducto())) {
+			throw new ErrorEntidadNoEncontrada("El producto {" + producto.getIdProducto() + "} no está registrado en el sistema");
+		}
+
 		// Control para eliminación
-		if(producto.getCantidadPedida() == 0) {
+		if(producto.getCantidad() == 0) {
 			LOGGER.info("Se eliminará el producto {} del carrito de {} por poner cantidad 0", producto.getIdProducto(), idUsuario);
 			eliminarProducto(idUsuario, producto.getIdProducto());
 			return getTotalesCarrito(idUsuario);
@@ -116,9 +154,16 @@ public class ServicioCarritoImpl implements ServicioCarrito {
 		// Consulta el producto
 		final Optional<CarritoEntity> optional = repository.findById(idUsuario);
 		if(optional.isPresent()) {
-			// Actualiza la cantidad
+			// Lee la entidad
 			final CarritoEntity entity = optional.get();
-			entity.getProductos().put(producto.getIdProducto(), producto.getCantidadPedida());
+			
+			// Verifica que el producto exista
+			if(!entity.getProductos().containsKey(producto.getIdProducto())) {
+				throw new ErrorEntidadNoEncontrada("No existe el producto {" + producto.getIdProducto() + "} en el carrito de compras del usuario {" + idUsuario + "}");
+			}
+
+			// Actualiza la cantidad
+			entity.getProductos().put(producto.getIdProducto(), producto.getCantidad());
 			
 			// Guarda los cambios
 			repository.save(entity);
@@ -131,29 +176,41 @@ public class ServicioCarritoImpl implements ServicioCarrito {
 	@Override public BeanTotales eliminarProducto(String idUsuario, int idProducto) {
 		// Consulta el producto
 		final Optional<CarritoEntity> optional = repository.findById(idUsuario);
-		if(optional.isPresent()) {
-			// Actualiza la cantidad
-			final CarritoEntity entity = optional.get();
-			entity.getProductos().remove(idProducto);
-			
-			// Guarda los cambios
-			if(entity.getProductos().isEmpty()) {
-				repository.delete(entity);
-			} else {
-				repository.save(entity);
-			}
+		if(!optional.isPresent()) {
+			throw new ErrorEntidadNoEncontrada("No se encontró un carrito para el usuario {" + idUsuario + "}");
 		}
-		
+
+		// Actualiza la cantidad
+		final CarritoEntity entity = optional.get();
+		if(entity.getProductos().remove(idProducto) == null) {
+			throw new ErrorEntidadNoEncontrada("No se encontró el producto {" + idProducto + "} en el carrito del usuario {" + idUsuario + "}");
+		}
+
+		// Guarda los cambios
+		if(entity.getProductos().isEmpty()) {
+			repository.delete(entity);
+		} else {
+			repository.save(entity);
+		}
+
 		// Retorna los totales
 		return getTotalesCarrito(idUsuario);
 	}
 
 	@Override public BeanTotales eliminarCarrito(String idUsuario) {
+		// Valida si el carrito existe
+		if(!repository.existsById(idUsuario)) {
+			throw new ErrorEntidadNoEncontrada("No existe el carrito de compras del usuario {" + idUsuario +"}");
+		}
+
 		// Crea la entidad
 		final CarritoEntity entity = new CarritoEntity(idUsuario, null);
 		repository.delete(entity);
 		return getTotalesCarrito(idUsuario);
 	}
 
-	
+	@Override public boolean isProductoEnCatalogo(int idProducto) {
+		return ConsumirCatalogoApi.getProducto(idProducto) != null;
+	}
+
 }

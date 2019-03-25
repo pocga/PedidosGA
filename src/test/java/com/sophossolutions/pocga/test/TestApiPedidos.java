@@ -158,32 +158,13 @@ public class TestApiPedidos {
 		final List<BeanPedido> pedidosReal = consultarPedidosUsuario();
 		System.out.println("Pedidos real:     " + pedidosReal);
 		System.out.println("");
-		
-		// Valida el tamaño del carrito
-		Assert.assertEquals(
-			"La cantidad de pedidos no coincide: " + operacion,
-			pedidosEsperados.size(),
-			pedidosReal.size()
-		);
 
-		// Valida el contenido
-		for(int i = 0 ; i < pedidosEsperados.size() ; i++) {
-			Assert.assertEquals(
-				"Los IDs de los pedidos no coinciden: " + operacion, 
-				pedidosEsperados.get(i).getIdPedido(), 
-				pedidosReal.get(i).getIdPedido()
-			);
-			Assert.assertEquals(
-				"Los IDs de los usuarios no coinciden: " + operacion, 
-				pedidosEsperados.get(i).getIdUsuario(), 
-				pedidosReal.get(i).getIdUsuario()
-			);
-			Assert.assertEquals(
-				"Los productos del pedido no coinciden: " + operacion, 
-				pedidosEsperados.get(i).getProductos(), 
-				pedidosReal.get(i).getProductos()
-			);
-		}
+		// Compara los datos
+		Assert.assertEquals(
+			"Los pedidos no coinciden: " + operacion, 
+			pedidosEsperados, 
+			pedidosReal
+		);
 	}
 	
 	/**

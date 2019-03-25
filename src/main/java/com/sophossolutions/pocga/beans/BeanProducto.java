@@ -1,5 +1,7 @@
 package com.sophossolutions.pocga.beans;
 
+import java.util.Map;
+
 /**
  * Bean que contiene los detalles de un producto
  * @author Ricardo José Ramírez Blauvelt
@@ -7,24 +9,24 @@ package com.sophossolutions.pocga.beans;
 public class BeanProducto {
 	
 	private int idProducto;
-	private int cantidadPedida;
+	private int cantidad;
 
 	public BeanProducto() {
 	}
 
 	public BeanProducto(int idProducto, int cantidadPedida) {
 		this.idProducto = idProducto;
-		this.cantidadPedida = cantidadPedida;
+		this.cantidad = cantidadPedida;
 	}
 	
 	@Override public String toString() {
-		return "BeanProducto{" + "idProducto=" + idProducto + ", cantidadPedida=" + cantidadPedida + '}';
+		return "BeanProducto{" + "idProducto=" + idProducto + ", cantidadPedida=" + cantidad + '}';
 	}
 
 	@Override public int hashCode() {
 		int hash = 7;
 		hash = 47 * hash + this.idProducto;
-		hash = 47 * hash + this.cantidadPedida;
+		hash = 47 * hash + this.cantidad;
 		return hash;
 	}
 
@@ -42,7 +44,7 @@ public class BeanProducto {
 		if (this.idProducto != other.idProducto) {
 			return false;
 		}
-		return this.cantidadPedida == other.cantidadPedida;
+		return this.cantidad == other.cantidad;
 	}
 
 	
@@ -55,12 +57,21 @@ public class BeanProducto {
 		this.idProducto = idProducto;
 	}
 
-	public int getCantidadPedida() {
-		return cantidadPedida;
+	public int getCantidad() {
+		return cantidad;
 	}
 
-	public void setCantidadPedida(int cantidadPedida) {
-		this.cantidadPedida = cantidadPedida;
+	public void setCantidad(int cantidad) {
+		this.cantidad = cantidad;
+	}
+
+	/**
+	 * Se crea el mapa de productos a partir del objeto
+	 * @param producto
+ 	 * @return 
+	 */
+	public static Map<Integer, Integer> toMap(BeanProducto producto) {
+		return Map.of(producto.getIdProducto(), producto.getCantidad());
 	}
 
 }

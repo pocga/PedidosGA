@@ -93,7 +93,7 @@ public class BeanCantidadProducto implements Comparable<BeanCantidadProducto> {
 	 */
 	public static BeanCantidadProducto fromBeanProducto(BeanProducto producto) {
 		final BeanCantidadProducto bcp = new BeanCantidadProducto();
-		bcp.setCantidad(producto.getCantidadPedida());
+		bcp.setCantidad(producto.getCantidad());
 		bcp.setProducto(ConsumirCatalogoApi.getProducto(producto.getIdProducto()));
 		return bcp;
 	}
