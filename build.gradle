@@ -1,3 +1,4 @@
+// Plugins
 plugins {
 	id 'org.springframework.boot' version '2.1.3.RELEASE'
 	id 'java'
@@ -7,11 +8,13 @@ plugins {
 
 apply plugin: 'io.spring.dependency-management'
 
+// Detalles de la aplicación
 group = 'com.sophossolutions.pocga'
 description = 'API de Pedidos para la PoC Digital de Grupo Aval, con Spring Boot, Cassandra, Docker y Jenkins'
 version = '1.0'
 sourceCompatibility = '11'
 
+// Mostrar advertencias al compilar
 tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 	options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
@@ -22,6 +25,7 @@ if (!hasProperty('mainClass')) {
 	ext.mainClass = 'com.sophossolutions.pocga.Application'
 }
 
+// Configuraciones adicionales
 configurations {
 	developmentOnly
 	runtimeClasspath {
@@ -29,10 +33,12 @@ configurations {
 	}
 }
 
+// Repositorios
 repositories {
 	mavenCentral()
 }
 
+// Dependencias
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-cassandra'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
@@ -46,6 +52,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
+// SonarQube
 sonarqube {
     properties {
         property "sonar.host.url", "https://sonarcloud.io"
@@ -66,3 +73,10 @@ jacocoTestReport {
 jacoco {
     reportsDir = file("$buildDir/jacoco")
 }
+
+// Copia el archivo Dockerfile a la carpeta de distribución
+task copyDockerfile(type: Copy) {
+    from "Dockerfile"
+    into "$buildDir/libs"
+}
+bootJar.finalizedBy copyDockerfile
