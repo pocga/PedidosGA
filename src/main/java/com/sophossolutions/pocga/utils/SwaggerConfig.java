@@ -1,4 +1,4 @@
-package com.sophossolutions.pocga.rest;
+package com.sophossolutions.pocga.utils;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,7 +1,6 @@
 package com.sophossolutions.pocga.beans;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.sophossolutions.pocga.cassandra.entity.PedidosEntity;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -129,24 +128,4 @@ public class BeanPedido implements Comparable<BeanPedido> {
 		return this.getIdPedido().compareTo(o.getIdPedido());
 	}
 
-	/**
-	 * Procedimiento que crea el bean, a partir de la entidad correspondiente
-	 * @param entity
-	 * @return 
-	 */
-	public static BeanPedido fromEntity(PedidosEntity entity) {
-		// Crea la entidad
-		final BeanPedido pedido = new BeanPedido();
-		pedido.setIdPedido(entity.getIdPedido());
-		pedido.setIdUsuario(entity.getIdUsuario());
-		pedido.setProductos(BeanCantidadProducto.fromMapProductos(entity.getProductos()));
-		pedido.setNombreDestinatario(entity.getNombreDestinatario());
-		pedido.setDireccionDestinatario(entity.getDireccionDestinatario());
-		pedido.setCiudadDestinatario(entity.getCiudadDestinatario());
-		pedido.setTelefonoDestinatario(entity.getTelefonoDestinatario());
-		pedido.setFecha(entity.getFecha());
-
-		// La entrega
-		return pedido;
-	}
 }

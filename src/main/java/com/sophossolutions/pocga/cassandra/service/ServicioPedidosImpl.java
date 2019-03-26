@@ -2,10 +2,10 @@ package com.sophossolutions.pocga.cassandra.service;
 
 import com.datastax.driver.core.utils.UUIDs;
 import com.sophossolutions.pocga.api.exceptions.ErrorCreandoEntidad;
-import com.sophossolutions.pocga.beans.BeanCantidadProducto;
 import com.sophossolutions.pocga.beans.BeanPedido;
 import com.sophossolutions.pocga.cassandra.entity.PedidosEntity;
 import com.sophossolutions.pocga.cassandra.repository.PedidosRepository;
+import com.sophossolutions.pocga.redis.service.ServicioProductos;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +33,9 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 	@Autowired
 	private ServicioCarrito servicioCarrito;
 
+	@Autowired
+	private ServicioProductos servicioProductos;
+
 	@Override public List<BeanPedido> getPedidos() {
 		// Consulta todos los pedidos
 		final Iterable<PedidosEntity> entidades = repository.findAll();
@@ -44,7 +47,7 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 		final Set<BeanPedido> listaPedidos = new TreeSet<>();
 		for(PedidosEntity pe : entidades) {
 			// Carga el pedido
-			listaPedidos.add(BeanPedido.fromEntity(pe));
+			listaPedidos.add(fromEntity(pe));
 		}
 		
 		// Entrega todos los pedidos (se trabaja con TreeSet para que lo ordene cronológicamente)
@@ -59,7 +62,7 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 		}
 		
 		// Entrega el pedido
-		return BeanPedido.fromEntity(entity.get());
+		return fromEntity(entity.get());
 	}
 
 	@Override public List<BeanPedido> getPedidos(String idUsuario) {
@@ -73,7 +76,7 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 		final Set<BeanPedido> listaPedidos = new TreeSet<>();
 		for(PedidosEntity pe : entidades) {
 			// Carga el pedido
-			listaPedidos.add(BeanPedido.fromEntity(pe));
+			listaPedidos.add(fromEntity(pe));
 		}
 		
 		// Entrega todos los pedidos (se trabaja con TreeSet para que lo ordene cronológicamente)
@@ -92,7 +95,7 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 		// Llena los campos
 		entity.setIdPedido(pedido.getIdPedido() != null ? pedido.getIdPedido() : UUIDs.timeBased());
 		entity.setIdUsuario(pedido.getIdUsuario());
-		entity.setProductos(BeanCantidadProducto.toMapProductos(pedido.getProductos()));
+		entity.setProductos(servicioProductos.toMapProductos(pedido.getProductos()));
 		entity.setNombreDestinatario(pedido.getNombreDestinatario());
 		entity.setDireccionDestinatario(pedido.getDireccionDestinatario());
 		entity.setCiudadDestinatario(pedido.getCiudadDestinatario());
@@ -110,7 +113,7 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 		}
 		
 		// Entrega el ID generado
-		return BeanPedido.fromEntity(newEntity);
+		return fromEntity(newEntity);
 	}
 
 	@Override public void eliminarPedido(UUID idPedido) {
@@ -119,6 +122,22 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 		} else {
 			throw new IllegalArgumentException("El ID de pedido {" + idPedido  + "} no existe y por tanto, no fue necesario eliminarlo");
 		}
+	}
+
+	@Override public BeanPedido fromEntity(PedidosEntity entity) {
+		// Crea la entidad
+		final BeanPedido pedido = new BeanPedido();
+		pedido.setIdPedido(entity.getIdPedido());
+		pedido.setIdUsuario(entity.getIdUsuario());
+		pedido.setProductos(servicioProductos.fromMapProductos(entity.getProductos()));
+		pedido.setNombreDestinatario(entity.getNombreDestinatario());
+		pedido.setDireccionDestinatario(entity.getDireccionDestinatario());
+		pedido.setCiudadDestinatario(entity.getCiudadDestinatario());
+		pedido.setTelefonoDestinatario(entity.getTelefonoDestinatario());
+		pedido.setFecha(entity.getFecha());
+
+		// La entrega
+		return pedido;
 	}
 
 }

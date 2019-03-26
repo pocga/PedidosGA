@@ -1,5 +1,5 @@
 -- Crea el keyspace
-CREATE KEYSPACE pocga WITH replication = {'class' : 'SimpleStrategy', 'replication_factor' : 1};
+CREATE KEYSPACE IF NOT EXISTS pocga WITH replication = {'class' : 'SimpleStrategy', 'replication_factor' : 1};
 USE pocga;
 
 -- Tabla para el carrito de compras

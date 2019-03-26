@@ -1,5 +1,7 @@
 package com.sophossolutions.pocga.beans;
 
+import com.sophossolutions.pocga.redis.entity.ProductoEntity;
+
 /**
  * Bean con todos los detalles de un producto
  * @author Ricardo José Ramírez Blauvelt
@@ -105,6 +107,38 @@ public class BeanDetallesProducto {
 
 	public void setMiniatura(String miniatura) {
 		this.miniatura = miniatura;
+	}
+
+	/**
+	 * Procedimiento que crea la entidad a partir del objeto
+	 * @param producto
+	 * @return 
+	 */
+	public static ProductoEntity toEntity(BeanDetallesProducto producto) {
+		final ProductoEntity entity = new ProductoEntity();
+		entity.setIdProducto(String.valueOf(producto.getIdProducto()));
+		entity.setCategoria(producto.getCategoria());
+		entity.setDescripcion(producto.getDescripcion());
+		entity.setPrecio(producto.getPrecio());
+		entity.setImagen(producto.getImagen());
+		entity.setMiniatura(producto.getMiniatura());
+		return entity;
+	}
+	
+	/**
+	 * Procedimiento que crea el objeto a partir de la entidadd
+	 * @param entity
+	 * @return 
+	 */
+	public static BeanDetallesProducto fromEntity(ProductoEntity entity) {
+		final BeanDetallesProducto producto = new BeanDetallesProducto();
+		producto.setIdProducto(Integer.parseInt(entity.getIdProducto()));
+		producto.setCategoria(entity.getCategoria());
+		producto.setDescripcion(entity.getDescripcion());
+		producto.setPrecio(entity.getPrecio());
+		producto.setImagen(entity.getImagen());
+		producto.setMiniatura(entity.getMiniatura());
+		return producto;
 	}
 
 }

@@ -1,13 +1,6 @@
 package com.sophossolutions.pocga.beans;
 
-import com.sophossolutions.pocga.rest.ConsumirCatalogoApi;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 /**
  * Bean para almacenar el producto y la cantidad
@@ -17,7 +10,7 @@ public class BeanCantidadProducto implements Comparable<BeanCantidadProducto> {
 	
 	private BeanDetallesProducto producto;
 	private int cantidad;
-
+	
 	public BeanCantidadProducto() {
 	}
 
@@ -69,52 +62,7 @@ public class BeanCantidadProducto implements Comparable<BeanCantidadProducto> {
 	public void setCantidad(int cantidad) {
 		this.cantidad = cantidad;
 	}
-
-	/**
-	 * Crea una lista de objetos a partir del mapa de producto -> cantidad
-	 * @param productos
-	 * @return 
-	 */
-	public static List<BeanCantidadProducto> fromMapProductos(Map<Integer, Integer> productos) {
-		final Set<BeanCantidadProducto> listaProductos = new TreeSet<>();
-		productos.forEach((producto, cantidad) -> {
-			final BeanCantidadProducto bcp = new BeanCantidadProducto();
-			bcp.setCantidad(cantidad);
-			bcp.setProducto(ConsumirCatalogoApi.getProducto(producto));
-			listaProductos.add(bcp);
-		});
-		return new ArrayList<>(listaProductos);
-	}
 	
-	/**
-	 * Crea un objeto con detalles a partir del objeto simple
-	 * @param producto
-	 * @return 
-	 */
-	public static BeanCantidadProducto fromBeanProducto(BeanProducto producto) {
-		final BeanCantidadProducto bcp = new BeanCantidadProducto();
-		bcp.setCantidad(producto.getCantidad());
-		bcp.setProducto(ConsumirCatalogoApi.getProducto(producto.getIdProducto()));
-		return bcp;
-	}
-
-	/**
-	 * Procedimiento que genera el mapa de productos a partir de la lista detallada
-	 * @param productos
-	 * @return 
-	 */
-	public static Map<Integer, Integer> toMapProductos(List<BeanCantidadProducto> productos) {
-		// Carga los productos
-		return productos.stream()
-			.collect(
-				Collectors.toMap(
-					bcp -> bcp.getProducto().getIdProducto(), 
-					BeanCantidadProducto::getCantidad
-				)
-			)
-		;
-	}
-
 	@Override public int compareTo(BeanCantidadProducto o) {
 		return this.getProducto().getIdProducto() - o.getProducto().getIdProducto();
 	}

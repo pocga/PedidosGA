@@ -2,10 +2,10 @@ package com.sophossolutions.pocga.test;
 
 import com.sophossolutions.pocga.beans.BeanApiError;
 import com.sophossolutions.pocga.beans.BeanCantidad;
-import com.sophossolutions.pocga.beans.BeanCantidadProducto;
 import com.sophossolutions.pocga.beans.BeanDetallesCarrito;
 import com.sophossolutions.pocga.beans.BeanProducto;
 import com.sophossolutions.pocga.beans.BeanTotales;
+import com.sophossolutions.pocga.redis.service.ServicioProductos;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -40,6 +40,9 @@ public class TestApiCarrito {
 	@Autowired
 	private TestRestTemplate testRestTemplate;
 	
+	@Autowired
+	private ServicioProductos servicioProductos;
+	
 	@Before
 	public void limpiarAntes() {
 		// Vacía el carrito para el usuario de prueba
@@ -66,7 +69,7 @@ public class TestApiCarrito {
 
 		// Adiciona un producto
 		adicionarProducto(producto1);
-		carritoEsperado.getProductos().add(BeanCantidadProducto.fromBeanProducto(producto1));
+		carritoEsperado.getProductos().add(servicioProductos.fromBeanProducto(producto1));
 		carritoEsperado.setTotales(new BeanTotales(10, 32998900));
 		validarCarrito(carritoEsperado, "Adición producto 1");
 		
@@ -77,21 +80,21 @@ public class TestApiCarrito {
 		// Adiciona otro producto
 		adicionarProducto(producto2);
 		adicionarProducto(producto3);
-		carritoEsperado.getProductos().add(BeanCantidadProducto.fromBeanProducto(producto2));
-		carritoEsperado.getProductos().add(BeanCantidadProducto.fromBeanProducto(producto3));
+		carritoEsperado.getProductos().add(servicioProductos.fromBeanProducto(producto2));
+		carritoEsperado.getProductos().add(servicioProductos.fromBeanProducto(producto3));
 		carritoEsperado.setTotales(new BeanTotales(16, 53998150));
 		validarCarrito(carritoEsperado, "Adición de producto 2 y 3");
 		
 		// Actualiza la cantidad del producto 1 a 8
 		producto1.setCantidad(8);
-		carritoEsperado.getProductos().set(0, BeanCantidadProducto.fromBeanProducto(producto1));
+		carritoEsperado.getProductos().set(0, servicioProductos.fromBeanProducto(producto1));
 		actualizarProductoBodyFull(producto1);
 		carritoEsperado.setTotales(new BeanTotales(14, 47398370));
 		validarCarrito(carritoEsperado, "Actualización de cantidad producto 1 a 8");
 		
 		// Actualiza la cantidad del producto 2 a 1
 		producto2.setCantidad(1);
-		carritoEsperado.getProductos().set(1, BeanCantidadProducto.fromBeanProducto(producto2));
+		carritoEsperado.getProductos().set(1, servicioProductos.fromBeanProducto(producto2));
 		carritoEsperado.setTotales(new BeanTotales(10, 32998810));
 		actualizarProductoBodyCantidad(producto2);
 		validarCarrito(carritoEsperado, "Actualización de cantidad producto 2");
@@ -112,7 +115,7 @@ public class TestApiCarrito {
 		// Adiciona dos unidades del producto 1, ahora son 10
 		producto1.setCantidad(2);
 		adicionarProducto(producto1);
-		carritoEsperado.setProductos(List.of(BeanCantidadProducto.fromBeanProducto(new BeanProducto(producto1.getIdProducto(), 10))));
+		carritoEsperado.setProductos(List.of(servicioProductos.fromBeanProducto(new BeanProducto(producto1.getIdProducto(), 10))));
 		carritoEsperado.setTotales(new BeanTotales(10, 32998900));
 		validarCarrito(carritoEsperado, "Adicionar producto 1, que ya existe en el carrito");
 		

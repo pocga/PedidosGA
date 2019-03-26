@@ -1,6 +1,7 @@
 package com.sophossolutions.pocga.cassandra.service;
 
 import com.sophossolutions.pocga.beans.BeanPedido;
+import com.sophossolutions.pocga.cassandra.entity.PedidosEntity;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,5 +43,12 @@ public interface ServicioPedidos {
 	 * @param idPedido 
 	 */
 	void eliminarPedido(UUID idPedido);
+
+	/**
+	 * Procedimiento que genera un objeto a partir de la entidad
+	 * @param entity
+	 * @return 
+	 */
+	BeanPedido fromEntity(PedidosEntity entity);
 
 }

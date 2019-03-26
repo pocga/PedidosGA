@@ -1,11 +1,15 @@
-package com.sophossolutions.pocga.rest;
+package com.sophossolutions.pocga.utils;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sophossolutions.pocga.beans.BeanDetallesProducto;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * Procedimiento que se encarga de traer los detalles de los productos desde la API de Catálogo
@@ -14,8 +18,6 @@ import org.springframework.web.client.RestTemplate;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ConsumirCatalogoApi {
 	
-	private static final String URL_CATALOGO_REST_API = "http://localhost:8080/catalogo/productos/";
-
 	@Autowired
 	private RestTemplate restTemplate;
 
@@ -31,9 +33,30 @@ public class ConsumirCatalogoApi {
 		PRODUCTOS.put(5, new BeanDetallesProducto(5, "televisores", 1, 1750000, "LG OLED Z40", "http://localhost/images/5/miniatura.jpg", "http://localhost/images/5/imagen.jpg"));
 	}
 	
-	public static BeanDetallesProducto getProducto(int idProducto) {
+	/**
+	 * Consulta el producto en la API remota
+	 * @param idProducto
+	 * @return 
+	 */
+	public static BeanDetallesProducto getProductoDesdeApi(int idProducto) {
+		/*
+		// Arma la URL de la API
+		final UriComponents uriComponents = UriComponentsBuilder.newInstance()
+			.host("localhost")
+			.port(8080)
+			.pathSegment("catalogo", "productos", "{idProducto}")
+			.buildAndExpand(idProducto)
+		;
+
 		// Consulta los detalles del producto en la API
-//		return restTemplate.getForObject(URL_CATALOGO_REST_API + idProducto, BeanDetallesProducto.class);
+		final ResponseEntity<BeanDetallesProducto> response = restTemplate.getForEntity(uriComponents.toUriString(), BeanDetallesProducto.class);
+		if(!response.getStatusCode().is2xxSuccessful()) {
+			return null;
+		}
+		
+		// Entrega el producto
+		return response.getBody();
+		*/
 
 		// Mock
 		return PRODUCTOS.get(idProducto);

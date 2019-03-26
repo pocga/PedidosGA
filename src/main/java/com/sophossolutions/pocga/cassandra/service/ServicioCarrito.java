@@ -54,12 +54,5 @@ public interface ServicioCarrito {
 	 * @return  
 	 */
 	BeanTotales eliminarCarrito(String idUsuario);
-	
-	/**
-	 * Procedimiento que valida si un producto existe en el catálogo
-	 * @param idProducto
-	 * @return 
-	 */
-	boolean isProductoEnCatalogo(int idProducto);
 
 }

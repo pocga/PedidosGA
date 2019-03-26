@@ -10,7 +10,7 @@ import com.sophossolutions.pocga.beans.BeanProducto;
 import com.sophossolutions.pocga.beans.BeanTotales;
 import com.sophossolutions.pocga.cassandra.entity.CarritoEntity;
 import com.sophossolutions.pocga.cassandra.repository.CarritoRepository;
-import com.sophossolutions.pocga.rest.ConsumirCatalogoApi;
+import com.sophossolutions.pocga.redis.service.ServicioProductos;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +31,9 @@ public class ServicioCarritoImpl implements ServicioCarrito {
 	@Autowired
 	private CarritoRepository repository;
 	
+	@Autowired
+	private ServicioProductos servicioProductos;
+	
 	@Override public BeanDetallesCarrito getCarrito(String idUsuario) {
 		// Consulta
 		final Optional<CarritoEntity> optional = repository.findById(idUsuario);
@@ -47,7 +50,7 @@ public class ServicioCarritoImpl implements ServicioCarrito {
 		entity.getProductos().forEach((producto, cantidad) -> {
 			final BeanCantidadProducto bcp = new BeanCantidadProducto();
 			bcp.setCantidad(cantidad);
-			final BeanDetallesProducto detallesProducto = ConsumirCatalogoApi.getProducto(producto);
+			final BeanDetallesProducto detallesProducto = servicioProductos.getProducto(producto);
 			if(detallesProducto == null) {
 				throw new ErrorEntidadNoEncontrada("El producto {" + producto + "} no existe en el catálogo");
 			}
@@ -98,7 +101,7 @@ public class ServicioCarritoImpl implements ServicioCarrito {
 		}
 
 		// Valida la existencia del producto
-		if(!isProductoEnCatalogo(producto.getIdProducto())) {
+		if(!servicioProductos.isProductoEnCatalogo(producto.getIdProducto())) {
 			throw new ErrorEntidadNoEncontrada("El producto {" + producto.getIdProducto() + "} no está registrado en el sistema");
 		}
 
@@ -140,7 +143,7 @@ public class ServicioCarritoImpl implements ServicioCarrito {
 		}
 		
 		// Valida la existencia del producto
-		if(!isProductoEnCatalogo(producto.getIdProducto())) {
+		if(!servicioProductos.isProductoEnCatalogo(producto.getIdProducto())) {
 			throw new ErrorEntidadNoEncontrada("El producto {" + producto.getIdProducto() + "} no está registrado en el sistema");
 		}
 
@@ -207,10 +210,6 @@ public class ServicioCarritoImpl implements ServicioCarrito {
 		final CarritoEntity entity = new CarritoEntity(idUsuario, null);
 		repository.delete(entity);
 		return getTotalesCarrito(idUsuario);
-	}
-
-	@Override public boolean isProductoEnCatalogo(int idProducto) {
-		return ConsumirCatalogoApi.getProducto(idProducto) != null;
 	}
 
 }

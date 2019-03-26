@@ -2,10 +2,10 @@ package com.sophossolutions.pocga.test;
 
 import com.datastax.driver.core.utils.UUIDs;
 import com.sophossolutions.pocga.beans.BeanApiError;
-import com.sophossolutions.pocga.beans.BeanCantidadProducto;
 import com.sophossolutions.pocga.beans.BeanPedido;
 import com.sophossolutions.pocga.beans.BeanProducto;
 import com.sophossolutions.pocga.beans.BeanTotales;
+import com.sophossolutions.pocga.redis.service.ServicioProductos;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +45,9 @@ public class TestApiPedidos {
 	@Autowired
 	private TestRestTemplate testRestTemplate;
 	
+	@Autowired
+	private ServicioProductos servicioProductos;
+	
 	@Before
 	public void limpiarAntes() {
 		eliminarPedidosUsuario();
@@ -69,7 +72,7 @@ public class TestApiPedidos {
 		final BeanPedido pedidoEsperado1 = new BeanPedido();
 		pedidoEsperado1.setIdPedido(ID_PEDIDO);
 		pedidoEsperado1.setIdUsuario(ID_USUARIO);
-		pedidoEsperado1.setProductos(List.of(BeanCantidadProducto.fromBeanProducto(producto1)));
+		pedidoEsperado1.setProductos(List.of(servicioProductos.fromBeanProducto(producto1)));
 		pedidoEsperado1.setFecha(LocalDateTime.now());
 		pedidoEsperado1.setNombreDestinatario("Ricardo");
 		pedidoEsperado1.setDireccionDestinatario("CL 48 20 34 OF 1009");
@@ -85,7 +88,7 @@ public class TestApiPedidos {
 		// Adiciona otro pedido
 		final BeanPedido pedidoEsperado2 = new BeanPedido();
 		pedidoEsperado2.setIdUsuario(ID_USUARIO);
-		pedidoEsperado2.setProductos(BeanCantidadProducto.fromMapProductos(Map.of(4, 1)));
+		pedidoEsperado2.setProductos(servicioProductos.fromMapProductos(Map.of(4, 1)));
 		pedidoEsperado2.setNombreDestinatario("Ana");
 		pedidoEsperado2.setDireccionDestinatario("CIR 3 71 59");
 		pedidoEsperado2.setCiudadDestinatario("Medellín");
@@ -132,14 +135,14 @@ public class TestApiPedidos {
 		final BeanPedido pedido1 = new BeanPedido();
 		pedido1.setIdPedido(UUIDs.timeBased());
 		pedido1.setIdUsuario(UUID.randomUUID().toString());
-		pedido1.setProductos(BeanCantidadProducto.fromMapProductos(Map.of(1, 1)));
+		pedido1.setProductos(servicioProductos.fromMapProductos(Map.of(1, 1)));
 		crearPedido(pedido1);
 
 		// Intenta crear otro con el mismo ID
 		final BeanPedido pedido2 = new BeanPedido();
 		pedido2.setIdPedido(pedido1.getIdPedido());
 		pedido2.setIdUsuario(pedido1.getIdUsuario());
-		pedido2.setProductos(BeanCantidadProducto.fromMapProductos(Map.of(2, 2)));
+		pedido2.setProductos(servicioProductos.fromMapProductos(Map.of(2, 2)));
 		final ResponseEntity<BeanApiError> error3 = testRestTemplate.postForEntity(MODULO, pedido2, BeanApiError.class);
 		Assert.assertEquals("Error duplicando pedido", HttpStatus.UNPROCESSABLE_ENTITY.value(), error3.getStatusCodeValue());
 		
