@@ -2,8 +2,10 @@ package com.sophossolutions.pocga.redis.entity;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.TimeToLive;
 
 /**
  * Entidad para acceder a los productos en Redis
@@ -20,6 +22,9 @@ public class ProductoEntity implements Serializable {
 	private String descripcion;
 	private String imagen;
 	private String miniatura;
+	
+	@TimeToLive(unit = TimeUnit.SECONDS)
+	private long timeToLive = 10;
 
 	public ProductoEntity() {
 	}
@@ -112,6 +117,14 @@ public class ProductoEntity implements Serializable {
 
 	public void setMiniatura(String miniatura) {
 		this.miniatura = miniatura;
+	}
+
+	public long getTimeToLive() {
+		return timeToLive;
+	}
+
+	public void setTimeToLive(long timeToLive) {
+		this.timeToLive = timeToLive;
 	}
 
 }

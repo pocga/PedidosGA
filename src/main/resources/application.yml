@@ -3,7 +3,7 @@
 spring:
     data:
         cassandra:
-            keyspaceName: pocga
+            keyspacename: pocga
             contactpoints: localhost
             port: 9042
             username: admin

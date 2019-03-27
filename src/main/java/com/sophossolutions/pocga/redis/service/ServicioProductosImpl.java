@@ -68,6 +68,14 @@ public class ServicioProductosImpl implements ServicioProductos {
 		return getProducto(idProducto) != null;
 	}
 
+	@Override public void removeProducto(int idProducto) {
+		repository.deleteById(String.valueOf(idProducto));
+	}
+
+	@Override public void clearCacheProductos() {
+		repository.deleteAll();
+	}
+
 	@Override public List<BeanCantidadProducto> fromMapProductos(Map<Integer, Integer> productos) {
 		final Set<BeanCantidadProducto> listaProductos = new TreeSet<>();
 		productos.forEach((productoEnMapa, cantidadEnMapa) -> {

@@ -50,11 +50,13 @@ public class TestApiPedidos {
 	
 	@Before
 	public void limpiarAntes() {
+		servicioProductos.clearCacheProductos();
 		eliminarPedidosUsuario();
 	}	
 	
 	@After
 	public void limpiarDespues() {
+		servicioProductos.clearCacheProductos();
 		eliminarPedidosUsuario();
 	}	
 	
@@ -67,6 +69,9 @@ public class TestApiPedidos {
 		// Simula el carrito
 		final BeanProducto producto1 = new BeanProducto(1, 10);
 		testRestTemplate.postForLocation("/carrito/" + ID_USUARIO + "/productos", producto1);
+		
+		// Pasa por la función para dar cobertura
+		servicioProductos.removeProducto(producto1.getIdProducto());
 
 		// Crea un pedido
 		final BeanPedido pedidoEsperado1 = new BeanPedido();

@@ -8,5 +8,5 @@ import org.springframework.data.cassandra.repository.config.EnableCassandraRepos
  */
 @EnableCassandraRepositories(basePackages = "com.sophossolutions.pocga.cassandra.repository")
 public class CassandraConfiguration {
-	
+
 }

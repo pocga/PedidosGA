@@ -13,7 +13,7 @@ import java.util.Map;
 public interface ServicioProductos {
 
 	/**
-	 * Procedimiento para consultar un producto
+	 * Procedimiento para consultar un producto del catálogo, bien sea del cache o de la API
 	 * @param idProducto
 	 * @return 
 	 */
@@ -27,10 +27,21 @@ public interface ServicioProductos {
 	boolean isProductoEnCatalogo(int idProducto);
 
 	/**
-	 * Procedimiento para guardar un producto
+	 * Procedimiento para guardar un producto en el cache
 	 * @param producto 
 	 */
 	void setProducto(BeanDetallesProducto producto);
+	
+	/**
+	 * Procedimiento que elimina un producto del cache
+	 * @param idProducto 
+	 */
+	void removeProducto(int idProducto);
+	
+	/**
+	 * Procedimiento que limpia el cache de productos
+	 */
+	void clearCacheProductos();
 
 	/**
 	 * Procedimiento que crea una lista de productos y cantidades, a partir del mapa que 

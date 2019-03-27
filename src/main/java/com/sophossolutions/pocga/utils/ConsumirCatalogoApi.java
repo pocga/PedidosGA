@@ -57,7 +57,7 @@ public class ConsumirCatalogoApi {
 		// Entrega el producto
 		return response.getBody();
 		*/
-
+		
 		// Mock
 		return PRODUCTOS.get(idProducto);
 	}

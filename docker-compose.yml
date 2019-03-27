@@ -1,0 +1,10 @@
+version: "3"
+services:
+  web:
+    image: rickyrb/pedidosga
+    ports:
+      - "8080:8080"
+  cassandra:
+    image: cassandra
+  redis:
+    image: redis
