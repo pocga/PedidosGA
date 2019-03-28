@@ -3,6 +3,8 @@ package com.sophossolutions.pocga.cassandra.service;
 import com.datastax.driver.core.utils.UUIDs;
 import com.sophossolutions.pocga.api.exceptions.ErrorCreandoEntidad;
 import com.sophossolutions.pocga.api.exceptions.ErrorEntidadNoEncontrada;
+import com.sophossolutions.pocga.beans.BeanCantidadProducto;
+import com.sophossolutions.pocga.beans.BeanDetallesProducto;
 import com.sophossolutions.pocga.beans.BeanPedido;
 import com.sophossolutions.pocga.cassandra.entity.PedidosEntity;
 import com.sophossolutions.pocga.cassandra.repository.PedidosRepository;
@@ -91,8 +93,14 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 		}
 		
 		// Valida los productos
-		pedido.getProductos().stream().filter((p) -> (!servicioProductos.isProductoEnCatalogo(p.getProducto().getIdProducto()))).forEach(p -> {
-			throw new ErrorEntidadNoEncontrada("El producto {" + p.getProducto().getIdProducto() + "} no existe en el catálogo");
+		pedido.getProductos().forEach(bcp -> {
+			final BeanDetallesProducto bdp = servicioProductos.getProducto(bcp.getProducto().getIdProducto());
+			if(bdp == null) {
+				throw new ErrorEntidadNoEncontrada("El producto {" + bcp.getProducto().getIdProducto() + "} no existe en el catálogo");
+			}
+			if (bcp.getCantidad() > bdp.getCantidadDisponible()) {
+				throw new ErrorCreandoEntidad("Intentando crear un pedido por más unidades {" + bcp.getCantidad() + "} de las disponibles en el inventario {" + bdp.getCantidadDisponible() + "} para el producto {" + bcp.getProducto().getIdProducto() + "}");
+			}
 		});
 
 		// Crea la entidad

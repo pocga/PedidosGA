@@ -39,6 +39,7 @@ public class ServicioProductosImpl implements ServicioProductos {
 		if(optional.isPresent()) {
 			// Mapea
 			producto = BeanDetallesProducto.fromEntity(optional.get());
+			LOGGER.info("Producto encontrado en cache: {}", producto);
 		} else {
 			LOGGER.info("Producto {} no registrado en cache. Buscando en API remota", idProducto);
 			producto = new ConsumirCatalogoApi().getProductoDesdeApi(idProducto);

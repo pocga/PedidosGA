@@ -119,6 +119,7 @@ public class BeanDetallesProducto {
 		entity.setIdProducto(String.valueOf(producto.getIdProducto()));
 		entity.setCategoria(producto.getCategoria());
 		entity.setDescripcion(producto.getDescripcion());
+		entity.setCantidadDisponible(producto.cantidadDisponible);
 		entity.setPrecio(producto.getPrecio());
 		entity.setImagen(producto.getImagen());
 		entity.setMiniatura(producto.getMiniatura());
@@ -135,6 +136,7 @@ public class BeanDetallesProducto {
 		producto.setIdProducto(Integer.parseInt(entity.getIdProducto()));
 		producto.setCategoria(entity.getCategoria());
 		producto.setDescripcion(entity.getDescripcion());
+		producto.setCantidadDisponible(entity.getCantidadDisponible());
 		producto.setPrecio(entity.getPrecio());
 		producto.setImagen(entity.getImagen());
 		producto.setMiniatura(entity.getMiniatura());

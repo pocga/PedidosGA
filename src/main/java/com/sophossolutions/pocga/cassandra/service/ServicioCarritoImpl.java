@@ -100,12 +100,12 @@ public class ServicioCarritoImpl implements ServicioCarrito {
 			throw new ErrorCreandoEntidad("No se puede adicionar un producto con cantidad inferior a 1");
 		}
 
-		// Valida la existencia del producto
-		if(!servicioProductos.isProductoEnCatalogo(producto.getIdProducto())) {
-			LOGGER.error("Adicionando producto al carrito: el producto {} no está registrado en el sistema", producto.getIdProducto());
+		// Valida la existencia del producto en el catálogo
+		final BeanDetallesProducto detallesProducto = servicioProductos.getProducto(producto.getIdProducto());
+		if(detallesProducto == null) {
 			throw new ErrorEntidadNoEncontrada("El producto {" + producto.getIdProducto() + "} no está registrado en el sistema");
 		}
-
+		
 		// Consulta el carrito
 		final Optional<CarritoEntity> optional = repository.findById(idUsuario);
 		
@@ -113,6 +113,9 @@ public class ServicioCarritoImpl implements ServicioCarrito {
 		if(!optional.isPresent()) {
 			// Se crea el carrito
 			final CarritoEntity nuevo = new CarritoEntity(idUsuario, BeanProducto.toMap(producto));
+			if(producto.getCantidad() > detallesProducto.getCantidadDisponible()) {
+				throw new ErrorCreandoEntidad("Intentando adicionar más unidades {" + producto.getCantidad() + "} de las disponibles en el inventario {" + detallesProducto.getCantidadDisponible() + "} para el producto {" + producto.getIdProducto() + "}");
+			}
 			repository.save(nuevo);
 		} else {
 			// Se actualiza el carrito
@@ -125,6 +128,13 @@ public class ServicioCarritoImpl implements ServicioCarrito {
 			} else {
 				actualizar.getProductos().put(producto.getIdProducto(), producto.getCantidad());
 			}
+
+			// Chequea el inventario
+			if(actualizar.getProductos().get(producto.getIdProducto()) > detallesProducto.getCantidadDisponible()) {
+				throw new ErrorCreandoEntidad("Intentando adicionar más unidades {" + actualizar.getProductos().get(producto.getIdProducto()) + "} de las disponibles en el inventario {" + detallesProducto.getCantidadDisponible() + "} para el producto {" + producto.getIdProducto() + "}");
+			}
+
+			// Guarda la entidad
 			repository.save(actualizar);
 		}
 		
@@ -143,8 +153,9 @@ public class ServicioCarritoImpl implements ServicioCarrito {
 			throw new ErrorEntidadNoEncontrada("No existe el carrito de compras del usuario {" + idUsuario +"}");
 		}
 		
-		// Valida la existencia del producto
-		if(!servicioProductos.isProductoEnCatalogo(producto.getIdProducto())) {
+		// Valida la existencia del producto en el catálogo
+		final BeanDetallesProducto detallesProducto = servicioProductos.getProducto(producto.getIdProducto());
+		if(detallesProducto == null) {
 			throw new ErrorEntidadNoEncontrada("El producto {" + producto.getIdProducto() + "} no está registrado en el sistema");
 		}
 
@@ -155,6 +166,11 @@ public class ServicioCarritoImpl implements ServicioCarrito {
 			return getTotalesCarrito(idUsuario);
 		}
 
+		// Valida el inventario
+		if (producto.getCantidad() > detallesProducto.getCantidadDisponible()) {
+			throw new ErrorActualizandoEntidad("Intentando establecer más unidades {" + producto.getCantidad() + "} de las disponibles en el inventario {" + detallesProducto.getCantidadDisponible() + "} para el producto {" + producto.getIdProducto() + "}");
+		}
+		
 		// Consulta el producto
 		final Optional<CarritoEntity> optional = repository.findById(idUsuario);
 		if(optional.isPresent()) {

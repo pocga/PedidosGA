@@ -205,6 +205,16 @@ public class TestApiCarrito {
 		System.out.println(error13);
 		Assert.assertEquals("Error actualizando producto con cantidad negativa", HttpStatus.UNPROCESSABLE_ENTITY.value(), error13.getStatusCodeValue());
 		
+		// Actualizar cualquier producto con más unidades que el inventario
+		final ResponseEntity<BeanApiError> error14 = testRestTemplate.exchange(MODULO + "/" + ID_USUARIO_EX + "/productos/", HttpMethod.PUT, new HttpEntity<>(new BeanProducto(5, Integer.MAX_VALUE)), BeanApiError.class);
+		System.out.println(error14);
+		Assert.assertEquals("Error actualizando producto con cantidad superior al inventario", HttpStatus.UNPROCESSABLE_ENTITY.value(), error14.getStatusCodeValue());
+		
+		// Adicionar una cantidad superior al inventario
+		final ResponseEntity<BeanApiError> error15 = testRestTemplate.postForEntity(MODULO + "/" + ID_USUARIO_EX + "/productos", new BeanProducto(1, Integer.MAX_VALUE), BeanApiError.class);
+		System.out.println(error15);
+		Assert.assertEquals("Error creando producto con cantidad superior al inventario", HttpStatus.UNPROCESSABLE_ENTITY.value(), error15.getStatusCodeValue());
+
 		// Limpia el carrito
 		testRestTemplate.delete("/carrito/" + ID_USUARIO_EX + "/productos");
 	}
