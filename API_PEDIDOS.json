@@ -1,0 +1,795 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API de Pedidos que soporta el carrito de compras y el registro de pedidos, para la PoC Digital de Grupo Aval, en Spring Boot y Cassandra",
+        "version": "1.0.0",
+        "title": "API de Pedidos",
+        "contact": {
+            "name": "Sophos Solutions S.A.S.",
+            "url": "http://www.sophossolutions.com",
+            "email": "pocga@sophossolutions.com"
+        },
+        "license": {
+            "name": "Apache License Version 2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0\""
+        }
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "tags": [
+        {
+            "name": "carrito-api",
+            "description": "Carrito Api"
+        },
+        {
+            "name": "pedidos-api",
+            "description": "Pedidos Api"
+        }
+    ],
+    "paths": {
+        "/carrito/{idUsuario}/productos": {
+            "get": {
+                "tags": [
+                    "carrito-api"
+                ],
+                "summary": "getCarrito",
+                "operationId": "getCarritoUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "idUsuario",
+                        "in": "path",
+                        "description": "idUsuario",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/BeanDetallesCarrito"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "deprecated": false
+            },
+            "post": {
+                "tags": [
+                    "carrito-api"
+                ],
+                "summary": "addProducto",
+                "operationId": "addProductoUsingPOST",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "idUsuario",
+                        "in": "path",
+                        "description": "idUsuario",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "producto",
+                        "description": "producto",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/BeanProducto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/BeanTotales"
+                        }
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "deprecated": false
+            },
+            "put": {
+                "tags": [
+                    "carrito-api"
+                ],
+                "summary": "setProducto",
+                "operationId": "setProductoUsingPUT_1",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "idUsuario",
+                        "in": "path",
+                        "description": "idUsuario",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "producto",
+                        "description": "producto",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/BeanProducto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/BeanTotales"
+                        }
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "deprecated": false
+            },
+            "delete": {
+                "tags": [
+                    "carrito-api"
+                ],
+                "summary": "removeCarrito",
+                "operationId": "removeCarritoUsingDELETE",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "idUsuario",
+                        "in": "path",
+                        "description": "idUsuario",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/BeanTotales"
+                        }
+                    },
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/carrito/{idUsuario}/productos/totales": {
+            "get": {
+                "tags": [
+                    "carrito-api"
+                ],
+                "summary": "getTotalesCarrito",
+                "operationId": "getTotalesCarritoUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "idUsuario",
+                        "in": "path",
+                        "description": "idUsuario",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/BeanTotales"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/carrito/{idUsuario}/productos/{idProducto}": {
+            "put": {
+                "tags": [
+                    "carrito-api"
+                ],
+                "summary": "setProducto",
+                "operationId": "setProductoUsingPUT",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "cantidad",
+                        "description": "cantidad",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/BeanCantidad"
+                        }
+                    },
+                    {
+                        "name": "idProducto",
+                        "in": "path",
+                        "description": "idProducto",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "idUsuario",
+                        "in": "path",
+                        "description": "idUsuario",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/BeanTotales"
+                        }
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "deprecated": false
+            },
+            "delete": {
+                "tags": [
+                    "carrito-api"
+                ],
+                "summary": "removeProducto",
+                "operationId": "removeProductoUsingDELETE",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "idProducto",
+                        "in": "path",
+                        "description": "idProducto",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "idUsuario",
+                        "in": "path",
+                        "description": "idUsuario",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/BeanTotales"
+                        }
+                    },
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/pedidos": {
+            "get": {
+                "tags": [
+                    "pedidos-api"
+                ],
+                "summary": "getPedidos",
+                "operationId": "getPedidosUsingGET_1",
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/BeanPedido"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "deprecated": false
+            },
+            "post": {
+                "tags": [
+                    "pedidos-api"
+                ],
+                "summary": "addPedido",
+                "operationId": "addPedidoUsingPOST",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "pedido",
+                        "description": "pedido",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/BeanCrearPedido"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/BeanPedido"
+                        }
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/pedidos/usuarios/{idUsuario}": {
+            "get": {
+                "tags": [
+                    "pedidos-api"
+                ],
+                "summary": "getPedidos",
+                "operationId": "getPedidosUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "idUsuario",
+                        "in": "path",
+                        "description": "idUsuario",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/BeanPedido"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/pedidos/{idPedido}": {
+            "get": {
+                "tags": [
+                    "pedidos-api"
+                ],
+                "summary": "getPedido",
+                "operationId": "getPedidoUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "idPedido",
+                        "in": "path",
+                        "description": "idPedido",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/BeanPedido"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "deprecated": false
+            },
+            "delete": {
+                "tags": [
+                    "pedidos-api"
+                ],
+                "summary": "removePedido",
+                "operationId": "removePedidoUsingDELETE",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "idPedido",
+                        "in": "path",
+                        "description": "idPedido",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "100 CONTINUE",
+                                "101 SWITCHING_PROTOCOLS",
+                                "102 PROCESSING",
+                                "103 CHECKPOINT",
+                                "200 OK",
+                                "201 CREATED",
+                                "202 ACCEPTED",
+                                "203 NON_AUTHORITATIVE_INFORMATION",
+                                "204 NO_CONTENT",
+                                "205 RESET_CONTENT",
+                                "206 PARTIAL_CONTENT",
+                                "207 MULTI_STATUS",
+                                "208 ALREADY_REPORTED",
+                                "226 IM_USED",
+                                "300 MULTIPLE_CHOICES",
+                                "301 MOVED_PERMANENTLY",
+                                "302 FOUND",
+                                "302 MOVED_TEMPORARILY",
+                                "303 SEE_OTHER",
+                                "304 NOT_MODIFIED",
+                                "305 USE_PROXY",
+                                "307 TEMPORARY_REDIRECT",
+                                "308 PERMANENT_REDIRECT",
+                                "400 BAD_REQUEST",
+                                "401 UNAUTHORIZED",
+                                "402 PAYMENT_REQUIRED",
+                                "403 FORBIDDEN",
+                                "404 NOT_FOUND",
+                                "405 METHOD_NOT_ALLOWED",
+                                "406 NOT_ACCEPTABLE",
+                                "407 PROXY_AUTHENTICATION_REQUIRED",
+                                "408 REQUEST_TIMEOUT",
+                                "409 CONFLICT",
+                                "410 GONE",
+                                "411 LENGTH_REQUIRED",
+                                "412 PRECONDITION_FAILED",
+                                "413 PAYLOAD_TOO_LARGE",
+                                "413 REQUEST_ENTITY_TOO_LARGE",
+                                "414 URI_TOO_LONG",
+                                "414 REQUEST_URI_TOO_LONG",
+                                "415 UNSUPPORTED_MEDIA_TYPE",
+                                "416 REQUESTED_RANGE_NOT_SATISFIABLE",
+                                "417 EXPECTATION_FAILED",
+                                "418 I_AM_A_TEAPOT",
+                                "419 INSUFFICIENT_SPACE_ON_RESOURCE",
+                                "420 METHOD_FAILURE",
+                                "421 DESTINATION_LOCKED",
+                                "422 UNPROCESSABLE_ENTITY",
+                                "423 LOCKED",
+                                "424 FAILED_DEPENDENCY",
+                                "426 UPGRADE_REQUIRED",
+                                "428 PRECONDITION_REQUIRED",
+                                "429 TOO_MANY_REQUESTS",
+                                "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+                                "451 UNAVAILABLE_FOR_LEGAL_REASONS",
+                                "500 INTERNAL_SERVER_ERROR",
+                                "501 NOT_IMPLEMENTED",
+                                "502 BAD_GATEWAY",
+                                "503 SERVICE_UNAVAILABLE",
+                                "504 GATEWAY_TIMEOUT",
+                                "505 HTTP_VERSION_NOT_SUPPORTED",
+                                "506 VARIANT_ALSO_NEGOTIATES",
+                                "507 INSUFFICIENT_STORAGE",
+                                "508 LOOP_DETECTED",
+                                "509 BANDWIDTH_LIMIT_EXCEEDED",
+                                "510 NOT_EXTENDED",
+                                "511 NETWORK_AUTHENTICATION_REQUIRED"
+                            ]
+                        }
+                    },
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "deprecated": false
+            }
+        }
+    },
+    "definitions": {
+        "BeanCantidad": {
+            "type": "object",
+            "properties": {
+                "cantidad": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            },
+            "title": "BeanCantidad"
+        },
+        "BeanCantidadProducto": {
+            "type": "object",
+            "properties": {
+                "cantidad": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "producto": {
+                    "$ref": "#/definitions/BeanDetallesProducto"
+                }
+            },
+            "title": "BeanCantidadProducto"
+        },
+        "BeanCrearPedido": {
+            "type": "object",
+            "properties": {
+                "ciudadDestinatario": {
+                    "type": "string"
+                },
+                "direccionDestinatario": {
+                    "type": "string"
+                },
+                "fecha": {
+                    "type": "string",
+                    "example": "yyyy-MM-dd'T'HH:mm:ss"
+                },
+                "idPedido": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "idUsuario": {
+                    "type": "string"
+                },
+                "nombreDestinatario": {
+                    "type": "string"
+                },
+                "productos": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/BeanProducto"
+                    }
+                },
+                "telefonoDestinatario": {
+                    "type": "string"
+                }
+            },
+            "title": "BeanCrearPedido"
+        },
+        "BeanDetallesCarrito": {
+            "type": "object",
+            "properties": {
+                "idUsuario": {
+                    "type": "string"
+                },
+                "productos": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/BeanCantidadProducto"
+                    }
+                },
+                "totales": {
+                    "$ref": "#/definitions/BeanTotales"
+                }
+            },
+            "title": "BeanDetallesCarrito"
+        },
+        "BeanDetallesProducto": {
+            "type": "object",
+            "properties": {
+                "cantidadDisponible": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "categoria": {
+                    "type": "string"
+                },
+                "descripcion": {
+                    "type": "string"
+                },
+                "idProducto": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "imagen": {
+                    "type": "string"
+                },
+                "miniatura": {
+                    "type": "string"
+                },
+                "precio": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            },
+            "title": "BeanDetallesProducto"
+        },
+        "BeanPedido": {
+            "type": "object",
+            "properties": {
+                "ciudadDestinatario": {
+                    "type": "string"
+                },
+                "direccionDestinatario": {
+                    "type": "string"
+                },
+                "fecha": {
+                    "type": "string",
+                    "example": "yyyy-MM-dd'T'HH:mm:ss"
+                },
+                "idPedido": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "idUsuario": {
+                    "type": "string"
+                },
+                "nombreDestinatario": {
+                    "type": "string"
+                },
+                "productos": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/BeanCantidadProducto"
+                    }
+                },
+                "telefonoDestinatario": {
+                    "type": "string"
+                }
+            },
+            "title": "BeanPedido"
+        },
+        "BeanProducto": {
+            "type": "object",
+            "properties": {
+                "cantidad": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "idProducto": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            },
+            "title": "BeanProducto"
+        },
+        "BeanTotales": {
+            "type": "object",
+            "properties": {
+                "totalCantidad": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "totalPrecio": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            },
+            "title": "BeanTotales"
+        }
+    }
+}
