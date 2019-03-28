@@ -1,5 +1,6 @@
 package com.sophossolutions.pocga.cassandra.service;
 
+import com.sophossolutions.pocga.beans.BeanCrearPedido;
 import com.sophossolutions.pocga.beans.BeanPedido;
 import com.sophossolutions.pocga.cassandra.entity.PedidosEntity;
 import java.util.List;
@@ -36,7 +37,7 @@ public interface ServicioPedidos {
 	 * @param pedido
 	 * @return 
 	 */
-	BeanPedido crearPedido(BeanPedido pedido);
+	BeanPedido crearPedido(BeanCrearPedido pedido);
 	
 	/**
 	 * Procedimiento que elimina un pedido

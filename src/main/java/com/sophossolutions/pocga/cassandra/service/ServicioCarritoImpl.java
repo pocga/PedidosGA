@@ -112,7 +112,7 @@ public class ServicioCarritoImpl implements ServicioCarrito {
 		// Determina si se crea el carrito o se adiciona un producto
 		if(!optional.isPresent()) {
 			// Se crea el carrito
-			final CarritoEntity nuevo = new CarritoEntity(idUsuario, BeanProducto.toMap(producto));
+			final CarritoEntity nuevo = new CarritoEntity(idUsuario, producto.toMap());
 			if(producto.getCantidad() > detallesProducto.getCantidadDisponible()) {
 				throw new ErrorCreandoEntidad("Intentando adicionar más unidades {" + producto.getCantidad() + "} de las disponibles en el inventario {" + detallesProducto.getCantidadDisponible() + "} para el producto {" + producto.getIdProducto() + "}");
 			}

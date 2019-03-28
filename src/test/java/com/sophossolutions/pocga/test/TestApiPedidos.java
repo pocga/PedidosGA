@@ -3,6 +3,7 @@ package com.sophossolutions.pocga.test;
 import com.datastax.driver.core.utils.UUIDs;
 import com.sophossolutions.pocga.beans.BeanApiError;
 import com.sophossolutions.pocga.beans.BeanCantidadProducto;
+import com.sophossolutions.pocga.beans.BeanCrearPedido;
 import com.sophossolutions.pocga.beans.BeanDetallesProducto;
 import com.sophossolutions.pocga.beans.BeanPedido;
 import com.sophossolutions.pocga.beans.BeanProducto;
@@ -86,7 +87,7 @@ public class TestApiPedidos {
 		pedidoEsperado1.setDireccionDestinatario("CL 48 20 34 OF 1009");
 		pedidoEsperado1.setCiudadDestinatario("Medellín");
 		pedidoEsperado1.setTelefonoDestinatario("+574 605 1010");
-		crearPedido(pedidoEsperado1);
+		crearPedido(pedidoEsperado1.toBeanCrearPedido());
 		validarPedidos(List.of(pedidoEsperado1), "Adición del pedido 1");
 		
 		// Validar que el carrito ya no tenga productos
@@ -101,7 +102,7 @@ public class TestApiPedidos {
 		pedidoEsperado2.setDireccionDestinatario("CIR 3 71 59");
 		pedidoEsperado2.setCiudadDestinatario("Medellín");
 		pedidoEsperado2.setTelefonoDestinatario("+574 412 3456");
-		final BeanPedido pedidoCreado2 = crearPedido(pedidoEsperado2);
+		final BeanPedido pedidoCreado2 = crearPedido(pedidoEsperado2.toBeanCrearPedido());
 		pedidoEsperado2.setIdPedido(pedidoCreado2.getIdPedido());
 		pedidoEsperado2.setFecha(pedidoCreado2.getFecha());
 		validarPedidos(List.of(pedidoEsperado1, pedidoEsperado2), "Adición del pedido 2");
@@ -144,7 +145,7 @@ public class TestApiPedidos {
 		pedido1.setIdPedido(UUIDs.timeBased());
 		pedido1.setIdUsuario(UUID.randomUUID().toString());
 		pedido1.setProductos(servicioProductos.fromMapProductos(Map.of(1, 1)));
-		crearPedido(pedido1);
+		crearPedido(pedido1.toBeanCrearPedido());
 
 		// Intenta crear otro con el mismo ID
 		final BeanPedido pedido2 = new BeanPedido();
@@ -275,7 +276,7 @@ public class TestApiPedidos {
 	/**
 	 * Crea un pedido
 	 */
-	private BeanPedido crearPedido(BeanPedido pedidoCrear) {
+	private BeanPedido crearPedido(BeanCrearPedido pedidoCrear) {
 		// Crea un pedido
 		final ResponseEntity<BeanPedido> pedidoCreado = testRestTemplate.postForEntity(
 			MODULO, 

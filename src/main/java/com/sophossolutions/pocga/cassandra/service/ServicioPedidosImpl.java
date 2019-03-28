@@ -3,9 +3,10 @@ package com.sophossolutions.pocga.cassandra.service;
 import com.datastax.driver.core.utils.UUIDs;
 import com.sophossolutions.pocga.api.exceptions.ErrorCreandoEntidad;
 import com.sophossolutions.pocga.api.exceptions.ErrorEntidadNoEncontrada;
-import com.sophossolutions.pocga.beans.BeanCantidadProducto;
+import com.sophossolutions.pocga.beans.BeanCrearPedido;
 import com.sophossolutions.pocga.beans.BeanDetallesProducto;
 import com.sophossolutions.pocga.beans.BeanPedido;
+import com.sophossolutions.pocga.beans.BeanProducto;
 import com.sophossolutions.pocga.cassandra.entity.PedidosEntity;
 import com.sophossolutions.pocga.cassandra.repository.PedidosRepository;
 import com.sophossolutions.pocga.redis.service.ServicioProductos;
@@ -86,7 +87,7 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 		return new ArrayList<>(listaPedidos);
 	}
 
-	@Override public BeanPedido crearPedido(BeanPedido pedido) {
+	@Override public BeanPedido crearPedido(BeanCrearPedido pedido) {
 		// Ya existe
 		if(pedido.getIdPedido() != null && repository.existsById(pedido.getIdPedido())) {
 			throw new ErrorCreandoEntidad("El ID de pedido {" + pedido.getIdPedido()  + "} ya existe y no se puede crear de nuevo");
@@ -94,12 +95,12 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 		
 		// Valida los productos
 		pedido.getProductos().forEach(bcp -> {
-			final BeanDetallesProducto bdp = servicioProductos.getProducto(bcp.getProducto().getIdProducto());
+			final BeanDetallesProducto bdp = servicioProductos.getProducto(bcp.getIdProducto());
 			if(bdp == null) {
-				throw new ErrorEntidadNoEncontrada("El producto {" + bcp.getProducto().getIdProducto() + "} no existe en el catálogo");
+				throw new ErrorEntidadNoEncontrada("El producto {" + bcp.getIdProducto() + "} no existe en el catálogo");
 			}
 			if (bcp.getCantidad() > bdp.getCantidadDisponible()) {
-				throw new ErrorCreandoEntidad("Intentando crear un pedido por más unidades {" + bcp.getCantidad() + "} de las disponibles en el inventario {" + bdp.getCantidadDisponible() + "} para el producto {" + bcp.getProducto().getIdProducto() + "}");
+				throw new ErrorCreandoEntidad("Intentando crear un pedido por más unidades {" + bcp.getCantidad() + "} de las disponibles en el inventario {" + bdp.getCantidadDisponible() + "} para el producto {" + bcp.getIdProducto() + "}");
 			}
 		});
 
@@ -109,7 +110,7 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 		// Llena los campos
 		entity.setIdPedido(pedido.getIdPedido() != null ? pedido.getIdPedido() : UUIDs.timeBased());
 		entity.setIdUsuario(pedido.getIdUsuario());
-		entity.setProductos(servicioProductos.toMapProductos(pedido.getProductos()));
+		entity.setProductos(BeanProducto.toMap(pedido.getProductos()));
 		entity.setNombreDestinatario(pedido.getNombreDestinatario());
 		entity.setDireccionDestinatario(pedido.getDireccionDestinatario());
 		entity.setCiudadDestinatario(pedido.getCiudadDestinatario());

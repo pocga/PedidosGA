@@ -1,20 +1,22 @@
 package com.sophossolutions.pocga.beans;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sophossolutions.pocga.redis.service.ServicioProductos;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * Bean con los detalles del pedido
+ * Bean simplificado para la creación de pedidos
  * @author Ricardo José Ramírez Blauvelt
  */
-public class BeanPedido implements Comparable<BeanPedido> {
+public class BeanCrearPedido implements Comparable<BeanCrearPedido> {
 	
 	private UUID idPedido;
 	private String idUsuario;
-	private List<BeanCantidadProducto> productos;
+	private List<BeanProducto> productos;
 	private String nombreDestinatario;
 	private String direccionDestinatario;
 	private String ciudadDestinatario;
@@ -22,10 +24,13 @@ public class BeanPedido implements Comparable<BeanPedido> {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
 	private LocalDateTime fecha;
 
-	public BeanPedido() {
+	@Autowired
+	private ServicioProductos servicioProductos;
+	
+	public BeanCrearPedido() {
 	}
 
-	public BeanPedido(UUID idPedido, String idUsuario, List<BeanCantidadProducto> productos, String nombreDestinatario, String direccionDestinatario, String ciudadDestinatario, String telefonoDestinatario, LocalDateTime fecha) {
+	public BeanCrearPedido(UUID idPedido, String idUsuario, List<BeanProducto> productos, String nombreDestinatario, String direccionDestinatario, String ciudadDestinatario, String telefonoDestinatario, LocalDateTime fecha) {
 		this.idPedido = idPedido;
 		this.idUsuario = idUsuario;
 		this.productos = productos;
@@ -37,12 +42,12 @@ public class BeanPedido implements Comparable<BeanPedido> {
 	}
 
 	@Override public String toString() {
-		return "BeanPedido{" + "idPedido=" + idPedido + ", idUsuario=" + idUsuario + ", productos=" + productos + ", nombreDestinatario=" + nombreDestinatario + ", direccionDestinatario=" + direccionDestinatario + ", ciudadDestinatario=" + ciudadDestinatario + ", telefonoDestinatario=" + telefonoDestinatario + ", fecha=" + fecha + '}';
+		return "BeanCrearPedidos{" + "idPedido=" + idPedido + ", idUsuario=" + idUsuario + ", productos=" + productos + ", nombreDestinatario=" + nombreDestinatario + ", direccionDestinatario=" + direccionDestinatario + ", ciudadDestinatario=" + ciudadDestinatario + ", telefonoDestinatario=" + telefonoDestinatario + ", fecha=" + fecha + '}';
 	}
 
 	@Override public int hashCode() {
-		int hash = 5;
-		hash = 67 * hash + Objects.hashCode(this.idPedido);
+		int hash = 7;
+		hash = 61 * hash + Objects.hashCode(this.idPedido);
 		return hash;
 	}
 
@@ -56,7 +61,7 @@ public class BeanPedido implements Comparable<BeanPedido> {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		final BeanPedido other = (BeanPedido) obj;
+		final BeanCrearPedido other = (BeanCrearPedido) obj;
 		return Objects.equals(this.idPedido, other.idPedido);
 	}
 
@@ -76,11 +81,11 @@ public class BeanPedido implements Comparable<BeanPedido> {
 		this.idUsuario = idUsuario;
 	}
 
-	public List<BeanCantidadProducto> getProductos() {
+	public List<BeanProducto> getProductos() {
 		return productos;
 	}
 
-	public void setProductos(List<BeanCantidadProducto> productos) {
+	public void setProductos(List<BeanProducto> productos) {
 		this.productos = productos;
 	}
 
@@ -115,7 +120,7 @@ public class BeanPedido implements Comparable<BeanPedido> {
 	public void setTelefonoDestinatario(String telefonoDestinatario) {
 		this.telefonoDestinatario = telefonoDestinatario;
 	}
-	
+
 	public LocalDateTime getFecha() {
 		return fecha;
 	}
@@ -124,25 +129,21 @@ public class BeanPedido implements Comparable<BeanPedido> {
 		this.fecha = fecha;
 	}
 
-	@Override public int compareTo(BeanPedido o) {
-		return this.getIdPedido().compareTo(o.getIdPedido());
+	@Override public int compareTo(BeanCrearPedido o) {
+		return this.idPedido.compareTo(o.getIdPedido());
 	}
 
-	/**
-	 * Mapea el bean
-	 * @return 
-	 */
-	public BeanCrearPedido toBeanCrearPedido() {
-		final BeanCrearPedido crear = new BeanCrearPedido();
-		crear.setIdPedido(idPedido);
-		crear.setIdUsuario(idUsuario);
-		crear.setProductos(BeanProducto.toListProductos(productos));
-		crear.setNombreDestinatario(nombreDestinatario);
-		crear.setDireccionDestinatario(direccionDestinatario);
-		crear.setCiudadDestinatario(ciudadDestinatario);
-		crear.setTelefonoDestinatario(telefonoDestinatario);
-		crear.setFecha(fecha);
-		return crear;
+	public BeanPedido toBeanPedido() {
+		final BeanPedido pedido = new BeanPedido();
+		pedido.setIdPedido(idPedido);
+		pedido.setIdUsuario(idUsuario);
+		pedido.setProductos(servicioProductos.fromMapProductos(BeanProducto.toMap(productos)));
+		pedido.setNombreDestinatario(nombreDestinatario);
+		pedido.setDireccionDestinatario(direccionDestinatario);
+		pedido.setCiudadDestinatario(ciudadDestinatario);
+		pedido.setTelefonoDestinatario(telefonoDestinatario);
+		pedido.setFecha(fecha);
+		return pedido;
 	}
 
 }

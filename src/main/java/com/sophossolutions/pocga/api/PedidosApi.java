@@ -3,6 +3,7 @@ package com.sophossolutions.pocga.api;
 import com.sophossolutions.pocga.api.exceptions.ErrorEntidadNoEncontrada;
 import com.sophossolutions.pocga.api.exceptions.ErrorCreandoEntidad;
 import com.sophossolutions.pocga.api.exceptions.ErrorListadoEntidadesVacio;
+import com.sophossolutions.pocga.beans.BeanCrearPedido;
 import com.sophossolutions.pocga.beans.BeanPedido;
 import com.sophossolutions.pocga.cassandra.service.ServicioPedidos;
 import java.util.List;
@@ -73,7 +74,7 @@ public class PedidosApi {
 	}
 
 	@PostMapping("")
-	public ResponseEntity<BeanPedido> addPedido(@RequestBody BeanPedido pedido) {
+	public ResponseEntity<BeanPedido> addPedido(@RequestBody BeanCrearPedido pedido) {
 		// Lo busca
 		try {
 			final BeanPedido pedidoCreado = servicio.crearPedido(pedido);

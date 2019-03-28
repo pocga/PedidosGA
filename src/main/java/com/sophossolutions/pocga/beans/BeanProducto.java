@@ -1,6 +1,8 @@
 package com.sophossolutions.pocga.beans;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Bean que contiene los detalles de un producto
@@ -67,11 +69,28 @@ public class BeanProducto {
 
 	/**
 	 * Se crea el mapa de productos a partir del objeto
-	 * @param producto
  	 * @return 
 	 */
-	public static Map<Integer, Integer> toMap(BeanProducto producto) {
-		return Map.of(producto.getIdProducto(), producto.getCantidad());
+	public Map<Integer, Integer> toMap() {
+		return Map.of(idProducto, cantidad);
+	}
+
+	/**
+	 * Se crea el mapa de productos a partir de la lista de objetos
+	 * @param productos
+ 	 * @return 
+	 */
+	public static Map<Integer, Integer> toMap(List<BeanProducto> productos) {
+		return productos.stream().collect(Collectors.toMap(BeanProducto::getIdProducto, BeanProducto::getCantidad));
+	}
+
+	/**
+	 * Se crea el mapa de productos a partir de la lista de objetos
+	 * @param productos
+ 	 * @return 
+	 */
+	public static List<BeanProducto> toListProductos(List<BeanCantidadProducto> productos) {
+		return productos.stream().map(bcp -> new BeanProducto(bcp.getProducto().getIdProducto(), bcp.getCantidad())).collect(Collectors.toList());
 	}
 
 }
