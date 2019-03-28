@@ -79,9 +79,9 @@ public class PedidosApi {
 			final BeanPedido pedidoCreado = servicio.crearPedido(pedido);
 			LOGGER.info("Creación del pedido '{}' exitosa", pedidoCreado.getIdPedido());
 			return new ResponseEntity<>(pedidoCreado, HttpStatus.CREATED);
-		} catch (ErrorCreandoEntidad ece) {
+		} catch (Exception e) {
 			LOGGER.error("No se pudo crear el pedido, pues ya existe un pedido con el ID: {} -> {}", pedido.getIdPedido(), HttpStatus.UNPROCESSABLE_ENTITY);
-			throw ece;
+			throw new ErrorCreandoEntidad(e.getLocalizedMessage());
 		}
 	}
 	

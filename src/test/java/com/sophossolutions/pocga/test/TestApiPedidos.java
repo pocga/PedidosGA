@@ -2,6 +2,8 @@ package com.sophossolutions.pocga.test;
 
 import com.datastax.driver.core.utils.UUIDs;
 import com.sophossolutions.pocga.beans.BeanApiError;
+import com.sophossolutions.pocga.beans.BeanCantidadProducto;
+import com.sophossolutions.pocga.beans.BeanDetallesProducto;
 import com.sophossolutions.pocga.beans.BeanPedido;
 import com.sophossolutions.pocga.beans.BeanProducto;
 import com.sophossolutions.pocga.beans.BeanTotales;
@@ -9,6 +11,7 @@ import com.sophossolutions.pocga.redis.service.ServicioProductos;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.junit.After;
@@ -155,6 +158,18 @@ public class TestApiPedidos {
 		final ResponseEntity<HttpStatus> error4 = testRestTemplate.exchange(MODULO + UUIDs.timeBased(), HttpMethod.DELETE, HttpEntity.EMPTY, HttpStatus.class);
 		Assert.assertEquals("Error borrando pedido inexistente", HttpStatus.NOT_FOUND.value(), error4.getStatusCodeValue());
 		
+		// Crear pedido con producto inexistente
+		final BeanPedido pedidoConProductoInexistente = new BeanPedido();
+		pedidoConProductoInexistente.setIdUsuario(UUID.randomUUID().toString());
+		pedidoConProductoInexistente.setProductos(List.of(new BeanCantidadProducto(new BeanDetallesProducto(new Random().nextInt(), "", 0, 0, "", "", ""), 1)));
+		pedidoConProductoInexistente.setNombreDestinatario("");
+		pedidoConProductoInexistente.setDireccionDestinatario("");
+		pedidoConProductoInexistente.setCiudadDestinatario("");
+		pedidoConProductoInexistente.setTelefonoDestinatario("");
+
+		final ResponseEntity<BeanApiError> error5 = testRestTemplate.postForEntity(MODULO, pedidoConProductoInexistente, BeanApiError.class);
+		Assert.assertEquals("Error creando pedido con producto inexistente", HttpStatus.UNPROCESSABLE_ENTITY.value(), error5.getStatusCodeValue());
+
 		// Limpia
 		testRestTemplate.delete(MODULO + pedido1.getIdPedido());
 	}

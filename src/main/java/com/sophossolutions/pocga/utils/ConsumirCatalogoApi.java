@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sophossolutions.pocga.beans.BeanDetallesProducto;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -18,8 +18,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ConsumirCatalogoApi {
 	
-	@Autowired
-	private RestTemplate restTemplate;
+	private static final Logger LOGGER = LoggerFactory.getLogger(ConsumirCatalogoApi.class);
 
 	/**
 	 * Mock
@@ -38,28 +37,34 @@ public class ConsumirCatalogoApi {
 	 * @param idProducto
 	 * @return 
 	 */
-	public static BeanDetallesProducto getProductoDesdeApi(int idProducto) {
-		/*
+	public BeanDetallesProducto getProductoDesdeApi(int idProducto) {
 		// Arma la URL de la API
 		final UriComponents uriComponents = UriComponentsBuilder.newInstance()
-			.host("localhost")
-			.port(8080)
-			.pathSegment("catalogo", "productos", "{idProducto}")
+			.scheme("https")
+			.host("fvwzxk56cg.execute-api.us-east-1.amazonaws.com")
+			.pathSegment("mock", "productos", "{idProducto}")
 			.buildAndExpand(idProducto)
 		;
 
 		// Consulta los detalles del producto en la API
-		final ResponseEntity<BeanDetallesProducto> response = restTemplate.getForEntity(uriComponents.toUriString(), BeanDetallesProducto.class);
+		final ResponseEntity<BeanDetallesProducto> response = new RestTemplateBuilder()
+			.build()
+			.getForEntity(
+				uriComponents.toUri(), 
+				BeanDetallesProducto.class
+			);
 		if(!response.getStatusCode().is2xxSuccessful()) {
+			return null;
+		}
+		LOGGER.info("ConsumirCatalogoApi -> Producto encontrado en API remota: {}", response);
+		
+		// Control
+		if(response.getBody().getIdProducto() == 0) {
 			return null;
 		}
 		
 		// Entrega el producto
 		return response.getBody();
-		*/
-		
-		// Mock
-		return PRODUCTOS.get(idProducto);
 	}
 
 }

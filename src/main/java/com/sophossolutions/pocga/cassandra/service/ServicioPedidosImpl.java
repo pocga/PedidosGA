@@ -2,6 +2,7 @@ package com.sophossolutions.pocga.cassandra.service;
 
 import com.datastax.driver.core.utils.UUIDs;
 import com.sophossolutions.pocga.api.exceptions.ErrorCreandoEntidad;
+import com.sophossolutions.pocga.api.exceptions.ErrorEntidadNoEncontrada;
 import com.sophossolutions.pocga.beans.BeanPedido;
 import com.sophossolutions.pocga.cassandra.entity.PedidosEntity;
 import com.sophossolutions.pocga.cassandra.repository.PedidosRepository;
@@ -88,6 +89,11 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 		if(pedido.getIdPedido() != null && repository.existsById(pedido.getIdPedido())) {
 			throw new ErrorCreandoEntidad("El ID de pedido {" + pedido.getIdPedido()  + "} ya existe y no se puede crear de nuevo");
 		}
+		
+		// Valida los productos
+		pedido.getProductos().stream().filter((p) -> (!servicioProductos.isProductoEnCatalogo(p.getProducto().getIdProducto()))).forEach(p -> {
+			throw new ErrorEntidadNoEncontrada("El producto {" + p.getProducto().getIdProducto() + "} no existe en el catálogo");
+		});
 
 		// Crea la entidad
 		final PedidosEntity entity = new PedidosEntity();

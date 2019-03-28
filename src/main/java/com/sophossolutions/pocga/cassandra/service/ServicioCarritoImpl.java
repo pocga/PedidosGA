@@ -102,6 +102,7 @@ public class ServicioCarritoImpl implements ServicioCarrito {
 
 		// Valida la existencia del producto
 		if(!servicioProductos.isProductoEnCatalogo(producto.getIdProducto())) {
+			LOGGER.error("Adicionando producto al carrito: el producto {} no está registrado en el sistema", producto.getIdProducto());
 			throw new ErrorEntidadNoEncontrada("El producto {" + producto.getIdProducto() + "} no está registrado en el sistema");
 		}
 

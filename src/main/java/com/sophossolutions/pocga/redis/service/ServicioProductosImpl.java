@@ -1,5 +1,6 @@
 package com.sophossolutions.pocga.redis.service;
 
+import com.sophossolutions.pocga.api.exceptions.ErrorEntidadNoEncontrada;
 import com.sophossolutions.pocga.beans.BeanCantidadProducto;
 import com.sophossolutions.pocga.beans.BeanDetallesProducto;
 import com.sophossolutions.pocga.beans.BeanProducto;
@@ -34,19 +35,19 @@ public class ServicioProductosImpl implements ServicioProductos {
 	@Override public BeanDetallesProducto getProducto(int idProducto) {
 		// Consulta la entidad
 		BeanDetallesProducto producto;
-		LOGGER.info("Producto a buscar en cache: {}", idProducto);
 		final Optional<ProductoEntity> optional = repository.findById(String.valueOf(idProducto));
 		if(optional.isPresent()) {
 			// Mapea
 			producto = BeanDetallesProducto.fromEntity(optional.get());
-			LOGGER.info("Producto en cache: {}", producto);
 		} else {
 			LOGGER.info("Producto {} no registrado en cache. Buscando en API remota", idProducto);
-			producto = ConsumirCatalogoApi.getProductoDesdeApi(idProducto);
+			producto = new ConsumirCatalogoApi().getProductoDesdeApi(idProducto);
+			LOGGER.info("Producto encontrado en API remota: {}", producto);
 			if(producto != null) {
-				LOGGER.info("Producto {} encontrado en API remota", idProducto);
 				setProducto(producto);
-				LOGGER.info("Producto {} registrado en cache", idProducto);
+			} else {
+				LOGGER.error("El producto {} no existe en el catálogo", idProducto);
+				throw new ErrorEntidadNoEncontrada("El producto {" + idProducto + "} no existe en el catálogo");
 			}
 		}
 
@@ -56,12 +57,10 @@ public class ServicioProductosImpl implements ServicioProductos {
 
 	@Override public void setProducto(BeanDetallesProducto producto) {
 		// Mapea
-		LOGGER.info("Producto a almacenar en cache: {}", producto);
 		final ProductoEntity entity = BeanDetallesProducto.toEntity(producto);
 		
 		// Almacena
-		final ProductoEntity entidadAlmacenada = repository.save(entity);
-		LOGGER.info("Entidad almacenada en cache: {}", entidadAlmacenada);
+		repository.save(entity);
 	}
 
 	@Override public boolean isProductoEnCatalogo(int idProducto) {
