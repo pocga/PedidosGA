@@ -24,7 +24,7 @@ public class ProductoEntity implements Serializable {
 	private String miniatura;
 	
 	@TimeToLive(unit = TimeUnit.SECONDS)
-	private long timeToLive = 10;
+	private long timeToLive = 30;
 
 	public ProductoEntity() {
 	}

@@ -1,21 +1,18 @@
 version: "3"
 services:
-  cassandra-data:
-    image: cassandra-data
   cassandra:
     image: cassandra
-    ports: 
-      - 9042:9042
-    depends_on: 
-      - cassandra-data
   redis:
     image: redis
-    ports: 
-      - 6379:6379
   web:
     image: rickyrb/pedidosga
     ports:
       - 8080:8080
+    links: 
+      - redis:redis
+      - cassandra:cassandra
+    environment: 
+      - SPRING_PROFILES_ACTIVE=docker
     depends_on: 
       - cassandra
       - redis
