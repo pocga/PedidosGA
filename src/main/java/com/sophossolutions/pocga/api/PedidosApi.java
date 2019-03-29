@@ -11,6 +11,8 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -47,6 +49,7 @@ public class PedidosApi {
 		}
 	}
 
+	@Cacheable(cacheNames = "pedidos", key = "#idPedido")
 	@GetMapping("/{idPedido}")
 	public ResponseEntity<BeanPedido> getPedido(@PathVariable UUID idPedido) {
 		// Lo busca
@@ -86,6 +89,7 @@ public class PedidosApi {
 		}
 	}
 	
+	@CacheEvict(cacheNames = "pedidos", key = "#idPedido")
 	@DeleteMapping("/{idPedido}")
 	public ResponseEntity<HttpStatus> removePedido(@PathVariable UUID idPedido) {
 		try {
