@@ -6,8 +6,6 @@ spring:
             keyspacename: pocga
             contactpoints: localhost
             port: 9042
-            username: admin
-            password: password
         redis:
             host: localhost
             port: 6379
