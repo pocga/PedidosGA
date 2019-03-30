@@ -42,6 +42,13 @@ public interface ServicioProductos {
 	 * Procedimiento que limpia el cache de productos
 	 */
 	void clearCacheProductos();
+	
+	/**
+	 * Consulta el producto en la API remota
+	 * @param idProducto
+	 * @return
+	 */
+	BeanDetallesProducto getProductoDesdeApi(int idProducto);
 
 	/**
 	 * Procedimiento que crea una lista de productos y cantidades, a partir del mapa que 

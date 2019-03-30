@@ -12,6 +12,8 @@ spring:
     redis:
         host: localhost
         port: 6379
+pedidosga:
+    urlApiProductos: https://fvwzxk56cg.execute-api.us-east-1.amazonaws.com/mock/productos/{idProducto}
 
 ---
 
@@ -25,6 +27,8 @@ spring:
     redis:
         host: redis
         port: 6379
+pedidosga:
+    urlApiProductos: https://fvwzxk56cg.execute-api.us-east-1.amazonaws.com/mock/productos/{idProducto}
 
 ---
 
@@ -38,3 +42,5 @@ spring:
     redis:
         host: redis
         port: 6379
+pedidosga:
+    urlApiProductos: https://fvwzxk56cg.execute-api.us-east-1.amazonaws.com/mock/productos/{idProducto}
