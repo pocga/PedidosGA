@@ -1,6 +1,6 @@
-package com.sophossolutions.pocga.cassandra.repository;
+package com.sophossolutions.pocga.redis.repository;
 
-import com.sophossolutions.pocga.cassandra.entity.CarritoEntity;
+import com.sophossolutions.pocga.redis.entity.CarritoEntity;
 import org.springframework.data.repository.CrudRepository;
 
 /**

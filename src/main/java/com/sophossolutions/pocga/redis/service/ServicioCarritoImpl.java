@@ -1,4 +1,4 @@
-package com.sophossolutions.pocga.cassandra.service;
+package com.sophossolutions.pocga.redis.service;
 
 import com.sophossolutions.pocga.api.exceptions.ErrorActualizandoEntidad;
 import com.sophossolutions.pocga.api.exceptions.ErrorCreandoEntidad;
@@ -8,9 +8,8 @@ import com.sophossolutions.pocga.beans.BeanDetallesCarrito;
 import com.sophossolutions.pocga.beans.BeanDetallesProducto;
 import com.sophossolutions.pocga.beans.BeanProducto;
 import com.sophossolutions.pocga.beans.BeanTotales;
-import com.sophossolutions.pocga.cassandra.entity.CarritoEntity;
-import com.sophossolutions.pocga.cassandra.repository.CarritoRepository;
-import com.sophossolutions.pocga.redis.service.ServicioProductos;
+import com.sophossolutions.pocga.redis.entity.CarritoEntity;
+import com.sophossolutions.pocga.redis.repository.CarritoRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

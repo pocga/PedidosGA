@@ -1,5 +1,6 @@
 package com.sophossolutions.pocga.cassandra.service;
 
+import com.sophossolutions.pocga.redis.service.ServicioCarrito;
 import com.datastax.driver.core.utils.UUIDs;
 import com.sophossolutions.pocga.api.exceptions.ErrorCreandoEntidad;
 import com.sophossolutions.pocga.api.exceptions.ErrorEntidadNoEncontrada;

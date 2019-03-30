@@ -8,7 +8,7 @@ import com.sophossolutions.pocga.beans.BeanCantidad;
 import com.sophossolutions.pocga.beans.BeanDetallesCarrito;
 import com.sophossolutions.pocga.beans.BeanProducto;
 import com.sophossolutions.pocga.beans.BeanTotales;
-import com.sophossolutions.pocga.cassandra.service.ServicioCarrito;
+import com.sophossolutions.pocga.redis.service.ServicioCarrito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

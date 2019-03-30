@@ -1,4 +1,4 @@
-package com.sophossolutions.pocga.cassandra.service;
+package com.sophossolutions.pocga.redis.service;
 
 import com.sophossolutions.pocga.beans.BeanDetallesCarrito;
 import com.sophossolutions.pocga.beans.BeanProducto;

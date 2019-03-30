@@ -1,22 +1,19 @@
-package com.sophossolutions.pocga.cassandra.entity;
+package com.sophossolutions.pocga.redis.entity;
 
 import java.util.Map;
 import java.util.Objects;
-import org.springframework.data.cassandra.core.mapping.Column;
-import org.springframework.data.cassandra.core.mapping.PrimaryKey;
-import org.springframework.data.cassandra.core.mapping.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 
 /**
  * Entidad del carrito de compras
  * @author Ricardo José Ramírez Blauvelt
  */
-@Table(value = "carrito")
+@RedisHash("carrito")
 public class CarritoEntity {
 	
-	@PrimaryKey(value = "id_usuario")
+	@Id
 	private String idUsuario;
-
-	@Column(value = "productos")
 	private Map<Integer, Integer> productos;
 
 	public CarritoEntity() {
