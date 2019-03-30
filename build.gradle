@@ -74,9 +74,17 @@ jacoco {
     reportsDir = file("$buildDir/jacoco")
 }
 
-// Copia el archivo Dockerfile a la carpeta de distribución
-task copyDockerfile(type: Copy) {
-    from "Dockerfile"
-    into "$buildDir/libs"
+// Copia los archivos docker a la carpeta build
+task copyDockerFiles(type: Copy) {
+    from "docker/"
+    into "$buildDir/docker"
 }
-bootJar.finalizedBy copyDockerfile
+bootJar.finalizedBy copyDockerFiles
+
+// Copia el bonario a la carpeta de docker
+task copyBinaryFile(type: Copy) {
+    from "$buildDir/libs/"
+    into "$buildDir/docker/pedidosga"
+}
+copyDockerFiles.finalizedBy copyBinaryFile
+copyBinaryFile.mustRunAfter(build)

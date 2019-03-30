@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+
+  pedidosga:
+    image: pocga/pedidosga
+    ports:
+     - 8080:8080
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    entrypoint: /wait-for-it.sh cassandra-compose:9042 -t 100 -- java -cp app:app/lib/* com.sophossolutions.pocga.Application
+    links: 
+      - cassandra
+      - redis
+    depends_on:
+      - cassandra
+      - redis
+    container_name: pedidosga-compose
+
+  cassandra:
+    image: pocga/cassandra
+    container_name: cassandra-compose
+
+  redis:
+    image: redis
+    container_name: redis-compose

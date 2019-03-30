@@ -21,6 +21,10 @@ COPY *.jar ${RUTA_JAR}
 # Instala CURL por conveniencia para pruebas
 RUN apt-get -y update && apt-get -y install curl
 
+# Archivo que espera a que Cassandra esté arriba
+COPY wait-for-it.sh /wait-for-it.sh
+RUN chmod a+x /wait-for-it.sh
+
 # Desempaca la aplicación y la lleva a la ruta
 RUN cd ${RUTA_JAR} && unzip *.jar && mkdir /app && mkdir /app/lib && cp BOOT-INF/lib/* /app/lib && cp META-INF/* /app/META-INF && cp -r BOOT-INF/classes/* /app
 
