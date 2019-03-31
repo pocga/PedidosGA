@@ -1,12 +1,13 @@
 package com.sophossolutions.pocga.beans;
 
 import com.sophossolutions.pocga.redis.entity.ProductoEntity;
+import java.io.Serializable;
 
 /**
  * Bean con todos los detalles de un producto
  * @author Ricardo José Ramírez Blauvelt
  */
-public class BeanDetallesProducto {
+public class BeanDetallesProducto implements Serializable {
 	
 	private int idProducto;
 	private String categoria;

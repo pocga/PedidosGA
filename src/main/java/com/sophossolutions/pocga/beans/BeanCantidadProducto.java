@@ -1,12 +1,13 @@
 package com.sophossolutions.pocga.beans;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * Bean para almacenar el producto y la cantidad
  * @author Ricardo José Ramírez Blauvelt
  */
-public class BeanCantidadProducto implements Comparable<BeanCantidadProducto> {
+public class BeanCantidadProducto implements Comparable<BeanCantidadProducto>, Serializable {
 	
 	private BeanDetallesProducto producto;
 	private int cantidad;
