@@ -1,4 +1,6 @@
 spring.profiles.active: dev
+spring.cache.type: redis
+spring.cache.redis.time-to-live: 60000
 
 ---
 

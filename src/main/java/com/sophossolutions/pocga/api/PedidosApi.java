@@ -11,6 +11,8 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,24 +38,25 @@ public class PedidosApi {
 	private ServicioPedidos servicio;
 	
 	@GetMapping("")
-	public ResponseEntity<List<BeanPedido>> getPedidos() {
+	public List<BeanPedido> getPedidos() {
 		final List<BeanPedido> listaPedidos = servicio.getPedidos();
 		if(!listaPedidos.isEmpty()) {
 			LOGGER.info("Consulta de todos los pedidos ({}) exitosa", listaPedidos.size());
-			return new ResponseEntity<>(listaPedidos, HttpStatus.OK);
+			return listaPedidos;
 		} else {
 			LOGGER.error("No hay pedidos registrados en el sistema -> {}", HttpStatus.NOT_FOUND);
 			throw new ErrorListadoEntidadesVacio("No hay pedidos registrados en el sistema");
 		}
 	}
 
+	@Cacheable(cacheNames = "pedidos", key = "#idPedido")
 	@GetMapping("/{idPedido}")
-	public ResponseEntity<BeanPedido> getPedido(@PathVariable UUID idPedido) {
+	public BeanPedido getPedido(@PathVariable UUID idPedido) {
 		// Lo busca
 		final BeanPedido pedido = servicio.getPedido(idPedido);
 		if(pedido != null) {
 			LOGGER.info("Consulta del pedido '{}' exitosa", idPedido);
-			return new ResponseEntity<>(pedido, HttpStatus.OK);
+			return pedido;
 		} else {
 			LOGGER.error("No se encontró el pedido '{}'", idPedido);
 			throw new ErrorEntidadNoEncontrada("No se encontró un pedido con el ID {" + idPedido + "}");
@@ -61,12 +64,12 @@ public class PedidosApi {
 	}
 
 	@GetMapping("/usuarios/{idUsuario}")
-	public ResponseEntity<List<BeanPedido>> getPedidos(@PathVariable String idUsuario) {
+	public List<BeanPedido> getPedidos(@PathVariable String idUsuario) {
 		// Lo busca
 		final List<BeanPedido> listaPedidos = servicio.getPedidos(idUsuario);
 		if(!listaPedidos.isEmpty()) {
 			LOGGER.info("Consulta de todos los pedidos del usuario '{}' exitosa", idUsuario);
-			return new ResponseEntity<>(listaPedidos, HttpStatus.OK);
+			return listaPedidos;
 		} else {
 			LOGGER.error("No se encontraron pedidos para el usuario: {} -> {}", idUsuario, HttpStatus.NOT_FOUND);
 			throw new ErrorListadoEntidadesVacio("No se encontraron pedidos para el usuario {" + idUsuario + "}");
@@ -86,6 +89,7 @@ public class PedidosApi {
 		}
 	}
 	
+	@CacheEvict(cacheNames = "pedidos", key = "#idPedido")
 	@DeleteMapping("/{idPedido}")
 	public ResponseEntity<HttpStatus> removePedido(@PathVariable UUID idPedido) {
 		try {

@@ -1,6 +1,7 @@
 package com.sophossolutions.pocga.beans;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -10,7 +11,7 @@ import java.util.UUID;
  * Bean con los detalles del pedido
  * @author Ricardo José Ramírez Blauvelt
  */
-public class BeanPedido implements Comparable<BeanPedido> {
+public class BeanPedido implements Comparable<BeanPedido>, Serializable {
 	
 	private UUID idPedido;
 	private String idUsuario;
