@@ -39,20 +39,6 @@ public class PedidosEntity {
 	@Column(value = "fecha")
 	private LocalDateTime fecha;
 
-	public PedidosEntity() {
-	}
-
-	public PedidosEntity(UUID idPedido, String idUsuario, Map<Integer, Integer> productos, String nombreDestinatario, String direccionDestinatario, String ciudadDestinatario, String telefonoDestinatario, LocalDateTime fecha) {
-		this.idPedido = idPedido;
-		this.idUsuario = idUsuario;
-		this.productos = productos;
-		this.nombreDestinatario = nombreDestinatario;
-		this.direccionDestinatario = direccionDestinatario;
-		this.ciudadDestinatario = ciudadDestinatario;
-		this.telefonoDestinatario = telefonoDestinatario;
-		this.fecha = fecha;
-	}
-
 	@Override public String toString() {
 		return "PedidosEntity{" + "idPedido=" + idPedido + ", idUsuario=" + idUsuario + ", productos=" + productos + ", nombreDestinatario=" + nombreDestinatario + ", direccionDestinatario=" + direccionDestinatario + ", ciudadDestinatario=" + ciudadDestinatario + ", telefonoDestinatario=" + telefonoDestinatario + ", fecha=" + fecha + '}';
 	}

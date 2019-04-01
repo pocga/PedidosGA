@@ -26,19 +26,6 @@ public class ProductoEntity implements Serializable {
 	@TimeToLive(unit = TimeUnit.SECONDS)
 	private long timeToLive = 30;
 
-	public ProductoEntity() {
-	}
-
-	public ProductoEntity(String idProducto, String categoria, int cantidadDisponible, int precio, String descripcion, String imagen, String miniatura) {
-		this.idProducto = idProducto;
-		this.categoria = categoria;
-		this.cantidadDisponible = cantidadDisponible;
-		this.precio = precio;
-		this.descripcion = descripcion;
-		this.imagen = imagen;
-		this.miniatura = miniatura;
-	}
-
 	@Override public String toString() {
 		return "ProductoEntity{" + "idProducto=" + idProducto + ", categoria=" + categoria + ", cantidadDisponible=" + cantidadDisponible + ", precio=" + precio + ", descripcion=" + descripcion + ", imagen=" + imagen + ", miniatura=" + miniatura + '}';
 	}

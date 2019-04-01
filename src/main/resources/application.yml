@@ -45,4 +45,4 @@ spring:
         host: redis
         port: 6379
 pedidosga:
-    urlApiProductos: https://fvwzxk56cg.execute-api.us-east-1.amazonaws.com/mock/productos/{idProducto}
+    urlApiProductos: https://jsc2p92uk1.execute-api.us-east-1.amazonaws.com/v1/catalogo/productos/{idProducto}

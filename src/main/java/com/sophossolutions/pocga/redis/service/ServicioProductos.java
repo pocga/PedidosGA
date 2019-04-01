@@ -20,13 +20,6 @@ public interface ServicioProductos {
 	BeanDetallesProducto getProducto(int idProducto);
 
 	/**
-	 * Procedimiento que determina si un producto existe en el catálogo
-	 * @param idProducto
-	 * @return 
-	 */
-	boolean isProductoEnCatalogo(int idProducto);
-
-	/**
 	 * Procedimiento para guardar un producto en el cache
 	 * @param producto 
 	 */
@@ -57,13 +50,6 @@ public interface ServicioProductos {
 	 * @return 
 	 */
 	List<BeanCantidadProducto> fromMapProductos(Map<Integer, Integer> productos);
-
-	/**
-	 * Procedimiento que genera un mapa de representación a partir de los objetos
-	 * @param productos
-	 * @return 
-	 */
-	Map<Integer, Integer> toMapProductos(List<BeanCantidadProducto> productos);
 
 	/**
 	 * Procedimiento que crea un objeto de producto a partir del bean que lo representa

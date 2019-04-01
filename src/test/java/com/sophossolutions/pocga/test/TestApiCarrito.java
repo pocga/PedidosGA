@@ -147,7 +147,7 @@ public class TestApiCarrito {
 		// Actualizar un producto para un usuario que no existe
 		final ResponseEntity<BeanApiError> error3 = testRestTemplate.exchange(MODULO + "/" + UUID.randomUUID() + "/productos", HttpMethod.PUT, new HttpEntity<>(new BeanProducto()), BeanApiError.class);
 		System.out.println(error3);
-		Assert.assertEquals("Error actualizando carrito inexistente", HttpStatus.UNPROCESSABLE_ENTITY.value(), error3.getStatusCodeValue());
+		Assert.assertEquals("Error actualizando carrito inexistente", HttpStatus.NOT_FOUND.value(), error3.getStatusCodeValue());
 		
 		// Crea un carrito
 		testRestTemplate.postForEntity(MODULO + "/" + ID_USUARIO_EX + "/productos", new BeanProducto(5, 1), BeanApiError.class);
@@ -163,12 +163,12 @@ public class TestApiCarrito {
 		// Actualizar un producto inexistente en un carrito
 		final ResponseEntity<BeanApiError> error5 = testRestTemplate.exchange(MODULO + "/" + ID_USUARIO_EX + "/productos", HttpMethod.PUT, new HttpEntity<>(new BeanProducto(idProductoNoExistente, 1)), BeanApiError.class);
 		System.out.println(error5);
-		Assert.assertEquals("Error actualizando producto inexistente", HttpStatus.UNPROCESSABLE_ENTITY.value(), error5.getStatusCodeValue());
+		Assert.assertEquals("Error actualizando producto inexistente", HttpStatus.NOT_FOUND.value(), error5.getStatusCodeValue());
 		
 		// Actualizar un producto inexistente en un carrito
 		final ResponseEntity<BeanApiError> error6 = testRestTemplate.exchange(MODULO + "/" + ID_USUARIO_EX + "/productos/" + idProductoNoExistente, HttpMethod.PUT, new HttpEntity<>(new BeanCantidad(5)), BeanApiError.class);
 		System.out.println(error6);
-		Assert.assertEquals("Error actualizando producto inexistente", HttpStatus.UNPROCESSABLE_ENTITY.value(), error6.getStatusCodeValue());
+		Assert.assertEquals("Error actualizando producto inexistente", HttpStatus.NOT_FOUND.value(), error6.getStatusCodeValue());
 		
 		// Actualizar un producto que no está en un carrito
 		final ResponseEntity<BeanApiError> error7 = testRestTemplate.exchange(MODULO + "/" + ID_USUARIO_EX + "/productos/" + 4, HttpMethod.PUT, new HttpEntity<>(new BeanCantidad(5)), BeanApiError.class);

@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,14 +46,12 @@ public class ServicioProductosImpl implements ServicioProductos {
 			producto = BeanDetallesProducto.fromEntity(optional.get());
 			LOGGER.info("Producto encontrado en cache: {}", producto);
 		} else {
-			LOGGER.info("Producto {} no registrado en cache. Buscando en API remota", idProducto);
 			producto = getProductoDesdeApi(idProducto);
 			LOGGER.info("Producto encontrado en API remota: {}", producto);
 			if(producto != null) {
 				setProducto(producto);
 			} else {
 				LOGGER.error("El producto {} no existe en el catálogo", idProducto);
-				throw new ErrorEntidadNoEncontrada("El producto {" + idProducto + "} no existe en el catálogo");
 			}
 		}
 
@@ -70,10 +67,6 @@ public class ServicioProductosImpl implements ServicioProductos {
 		repository.save(entity);
 	}
 
-	@Override public boolean isProductoEnCatalogo(int idProducto) {
-		return getProducto(idProducto) != null;
-	}
-
 	@Override public void removeProducto(int idProducto) {
 		repository.deleteById(String.valueOf(idProducto));
 	}
@@ -87,22 +80,14 @@ public class ServicioProductosImpl implements ServicioProductos {
 		productos.forEach((productoEnMapa, cantidadEnMapa) -> {
 			final BeanCantidadProducto bcp = new BeanCantidadProducto();
 			bcp.setCantidad(cantidadEnMapa);
-			bcp.setProducto(getProducto(productoEnMapa));
+			final BeanDetallesProducto detallesProducto = getProducto(productoEnMapa);
+			if(detallesProducto == null) {
+				throw new ErrorEntidadNoEncontrada(String.format("El producto {%s} no está registrado en el sistema", productoEnMapa));
+			}
+			bcp.setProducto(detallesProducto);
 			listaProductos.add(bcp);
 		});
 		return new ArrayList<>(listaProductos);
-	}
-
-	@Override public Map<Integer, Integer> toMapProductos(List<BeanCantidadProducto> productos) {
-		// Carga los productos
-		return productos.stream()
-			.collect(
-				Collectors.toMap(
-					bcp -> bcp.getProducto().getIdProducto(),
-					BeanCantidadProducto::getCantidad
-				)
-			)
-		;
 	}
 
 	@Override public BeanCantidadProducto fromBeanProducto(BeanProducto producto) {
@@ -114,7 +99,7 @@ public class ServicioProductosImpl implements ServicioProductos {
 
 	@Override public BeanDetallesProducto getProductoDesdeApi(int idProducto) {
 		// Consulta los detalles del producto en la API
-		LOGGER.info("URL de la API de Productos: " + urlApiProductos);
+		LOGGER.info("URL de la API de Productos: {}", urlApiProductos);
 		final ResponseEntity<BeanDetallesProducto> response = new RestTemplateBuilder()
 			.build()
 			.getForEntity(
@@ -124,7 +109,7 @@ public class ServicioProductosImpl implements ServicioProductos {
 		if (!response.getStatusCode().is2xxSuccessful()) {
 			return null;
 		}
-		LOGGER.info("ConsumirCatalogoApi -> Producto encontrado en API remota: {}", response);
+		LOGGER.info("Respuesta de API remota para idProducto {}: {}", idProducto, response);
 
 		// Control
 		if (response.getBody() == null || response.getBody().getIdProducto() == 0) {

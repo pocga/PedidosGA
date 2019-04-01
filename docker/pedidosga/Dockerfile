@@ -18,11 +18,12 @@ ARG RUTA_JAR=/tmp/ApiPedidosGA/
 # Archivo bootJAR generado
 COPY *.jar ${RUTA_JAR}
 
-# Instala CURL por conveniencia para pruebas
-RUN apt-get -y update && apt-get -y install curl
+# Instala CURL por conveniencia para pruebas y dos2unix para asegurar los formatos de los archivos (git los daña)
+RUN apt-get -y update && apt-get -y install curl && apt-get -y install dos2unix
 
 # Archivo que espera a que Cassandra esté arriba
 COPY wait-for-it.sh /wait-for-it.sh
+RUN dos2unix wait-for-it.sh
 RUN chmod a+x /wait-for-it.sh
 
 # Desempaca la aplicación y la lleva a la ruta

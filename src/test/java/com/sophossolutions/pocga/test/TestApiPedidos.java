@@ -72,7 +72,7 @@ public class TestApiPedidos {
 	public void testOperacionesPedidos() {
 		// Simula el carrito
 		final BeanProducto producto1 = new BeanProducto(1, 10);
-		testRestTemplate.postForLocation("/carrito/" + ID_USUARIO + "/productos", producto1);
+		testRestTemplate.postForEntity("/carrito/" + ID_USUARIO + "/productos", producto1, BeanTotales.class);
 		
 		// Pasa por la función para dar cobertura
 		servicioProductos.removeProducto(producto1.getIdProducto());
@@ -138,6 +138,7 @@ public class TestApiPedidos {
 		
 		// Crear pedido sin cuerpo
 		final ResponseEntity<BeanApiError> error2 = testRestTemplate.postForEntity(MODULO, (BeanPedido)null, BeanApiError.class);
+		System.out.println(error2);
 		Assert.assertEquals("Error creando pedido sin cuerpo", HttpStatus.UNSUPPORTED_MEDIA_TYPE.value(), error2.getStatusCodeValue());
 		
 		// Crea un pedido
@@ -153,10 +154,12 @@ public class TestApiPedidos {
 		pedido2.setIdUsuario(pedido1.getIdUsuario());
 		pedido2.setProductos(servicioProductos.fromMapProductos(Map.of(2, 2)));
 		final ResponseEntity<BeanApiError> error3 = testRestTemplate.postForEntity(MODULO, pedido2, BeanApiError.class);
+		System.out.println(error3);
 		Assert.assertEquals("Error duplicando pedido", HttpStatus.UNPROCESSABLE_ENTITY.value(), error3.getStatusCodeValue());
 		
 		// Intenta borrar un pedido inexistente
 		final ResponseEntity<HttpStatus> error4 = testRestTemplate.exchange(MODULO + UUIDs.timeBased(), HttpMethod.DELETE, HttpEntity.EMPTY, HttpStatus.class);
+		System.out.println(error4);
 		Assert.assertEquals("Error borrando pedido inexistente", HttpStatus.NOT_FOUND.value(), error4.getStatusCodeValue());
 		
 		// Crear pedido con producto inexistente
@@ -168,13 +171,13 @@ public class TestApiPedidos {
 		pedidoConProductoInexistente.setCiudadDestinatario("");
 		pedidoConProductoInexistente.setTelefonoDestinatario("");
 		final ResponseEntity<BeanApiError> error5 = testRestTemplate.postForEntity(MODULO, pedidoConProductoInexistente, BeanApiError.class);
-		Assert.assertEquals("Error creando pedido con producto inexistente", HttpStatus.UNPROCESSABLE_ENTITY.value(), error5.getStatusCodeValue());
+		System.out.println(error5);
+		Assert.assertEquals("Error creando pedido con producto inexistente", HttpStatus.NOT_FOUND.value(), error5.getStatusCodeValue());
 
-		// Intenta crear otro con el mismo ID
-		final BeanPedido pedido3 = new BeanPedido();
-		pedido3.setIdUsuario(pedido1.getIdUsuario());
-		pedido3.setProductos(servicioProductos.fromMapProductos(Map.of(2, Integer.MAX_VALUE)));
+		// Intenta crear pedido con cantidades por fuera del inventario
+		final BeanCrearPedido pedido3 = new BeanCrearPedido(null, UUID.randomUUID().toString(), List.of(new BeanProducto(2, Integer.MAX_VALUE)), null, null, null, null, null);
 		final ResponseEntity<BeanApiError> error6 = testRestTemplate.postForEntity(MODULO, pedido3, BeanApiError.class);
+		System.out.println(error6);
 		Assert.assertEquals("Error creando pedido por más unidades de las disponibles en el inventario", HttpStatus.UNPROCESSABLE_ENTITY.value(), error6.getStatusCodeValue());
 
 		// Limpia
@@ -315,25 +318,7 @@ public class TestApiPedidos {
 	 * Elimina los pedidos que tenga registrado el usuario
 	 */
 	private void eliminarPedidosUsuario() {
-		// Si no hay pedidos, no hay que borrar nada
-		final List<BeanPedido> pedidosUsuario = consultarPedidosUsuario();
-		if(pedidosUsuario.isEmpty()) {
-			return;
-		}
-		
-		// Borra los pedidos del usuario
-		pedidosUsuario.forEach(pedido -> {
-			// Borra el pedido
-			final ResponseEntity<HttpStatus> pedidoBorrado = testRestTemplate.exchange(
-				MODULO + pedido.getIdPedido(),
-				HttpMethod.DELETE,
-				HttpEntity.EMPTY,
-				HttpStatus.class
-			);
-			if (pedidoBorrado.getStatusCode() != HttpStatus.NO_CONTENT) {
-				Assert.fail("Falló el borrado del pedido {" + pedido.getIdPedido() + "}");
-			}
-		});
+		testRestTemplate.delete(MODULO + "usuarios/" + ID_USUARIO);
 	}
 
 }

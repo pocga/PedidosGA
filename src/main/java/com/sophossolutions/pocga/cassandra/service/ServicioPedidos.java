@@ -44,7 +44,13 @@ public interface ServicioPedidos {
 	 * @param idPedido 
 	 */
 	void eliminarPedido(UUID idPedido);
-
+	
+	/**
+	 * Procedimiento que permite eliminar todos los pedidos de un usuario
+	 * @param idUsuario 
+	 */
+	void eliminarPedidosUsuario(String idUsuario);
+	
 	/**
 	 * Procedimiento que genera un objeto a partir de la entidad
 	 * @param entity
