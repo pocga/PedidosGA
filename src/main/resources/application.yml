@@ -45,4 +45,4 @@ spring:
         host: redis
         port: 6379
 pedidosga:
-    urlApiProductos: http://catalogoga/catalogo/productos/{idProducto}
+    urlApiProductos: http://catalogoga:4000/catalogo/productos/{idProducto}
