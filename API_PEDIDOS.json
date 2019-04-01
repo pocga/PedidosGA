@@ -471,6 +471,40 @@
                     }
                 },
                 "deprecated": false
+            },
+            "delete": {
+                "tags": [
+                    "pedidos-api"
+                ],
+                "summary": "removePedidosUsuario",
+                "operationId": "removePedidosUsuarioUsingDELETE",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "idUsuario",
+                        "in": "path",
+                        "description": "idUsuario",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "deprecated": false
             }
         },
         "/pedidos/{idPedido}": {

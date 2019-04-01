@@ -80,10 +80,7 @@ public class ServicioCarritoImpl implements ServicioCarrito {
 	@Override public BeanTotales getTotalesCarrito(String idUsuario) {
 		// Trae todos los productos en el carrito
 		final BeanDetallesCarrito detalles = getCarrito(idUsuario);
-		if(detalles == null) {
-			return new BeanTotales(0, 0);
-		}
-		
+
 		// Calcula los totales
 		LOGGER.info("Consulta de los totales del carrito del usuario '{}' exitosa", idUsuario);
 		return getTotalesCarrito(detalles.getProductos());
