@@ -12,9 +12,11 @@ import com.sophossolutions.pocga.beans.BeanProducto;
 import com.sophossolutions.pocga.cassandra.entity.PedidosEntity;
 import com.sophossolutions.pocga.cassandra.repository.PedidosRepository;
 import com.sophossolutions.pocga.redis.service.ServicioProductos;
+import com.sophossolutions.pocga.utils.AES;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
@@ -104,6 +106,19 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 	}
 
 	@Override public BeanPedido crearPedido(BeanCrearPedido pedido) {
+		// Validación
+		final Map<String, String> datosEnvio = Map.of(
+			"nombre", pedido.getNombreDestinatario(), 
+			"dirección", pedido.getDireccionDestinatario(), 
+			"ciudad", pedido.getCiudadDestinatario(), 
+			"teléfono", pedido.getTelefonoDestinatario()
+		);
+		datosEnvio.forEach((campo, valor) -> {
+			if(valor.isBlank()) {
+				throw new ErrorCreandoEntidad("No especificó un valor para el campo '" + campo + "'. Valor ingresado: '" + valor + "'");
+			}
+		});
+
 		// Ya existe
 		if(pedido.getIdPedido() != null && repository.existsById(pedido.getIdPedido())) {
 			final String error = "El ID de pedido {" + pedido.getIdPedido()  + "} ya existe y no se puede crear de nuevo";
@@ -130,14 +145,22 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 		final PedidosEntity entity = new PedidosEntity();
 		
 		// Llena los campos
-		entity.setIdPedido(pedido.getIdPedido() != null ? pedido.getIdPedido() : UUIDs.timeBased());
-		entity.setIdUsuario(pedido.getIdUsuario());
-		entity.setProductos(BeanProducto.toMap(pedido.getProductos()));
-		entity.setNombreDestinatario(pedido.getNombreDestinatario());
-		entity.setDireccionDestinatario(pedido.getDireccionDestinatario());
-		entity.setCiudadDestinatario(pedido.getCiudadDestinatario());
-		entity.setTelefonoDestinatario(pedido.getTelefonoDestinatario());
-		entity.setFecha(pedido.getFecha() != null ? pedido.getFecha() : LocalDateTime.now());
+		try {
+			entity.setIdPedido(pedido.getIdPedido() != null ? pedido.getIdPedido() : UUIDs.timeBased());
+			entity.setIdUsuario(pedido.getIdUsuario());
+			entity.setProductos(BeanProducto.toMap(pedido.getProductos()));
+			entity.setNombreDestinatario(AES.cifrar(pedido.getNombreDestinatario()));
+			entity.setDireccionDestinatario(AES.cifrar(pedido.getDireccionDestinatario()));
+			entity.setCiudadDestinatario(AES.cifrar(pedido.getCiudadDestinatario()));
+			entity.setTelefonoDestinatario(AES.cifrar(pedido.getTelefonoDestinatario()));
+			entity.setFecha(pedido.getFecha() != null ? pedido.getFecha() : LocalDateTime.now());
+		} catch (Exception e) {
+			final String error = "No se pudo cifrar la información de envío del pedido";
+			LOGGER.error("Error creando el pedido con ID '{}'. Error: {}", pedido.getIdPedido(), error);
+			final ErrorCreandoEntidad eene = new ErrorCreandoEntidad(error);
+			eene.addSuppressed(e);
+			throw eene;
+		}
 		
 		// Registra la entidad
 		final PedidosEntity newEntity = repository.save(entity);
@@ -176,20 +199,29 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 		}
 	}
 
-	@Override public BeanPedido fromEntity(PedidosEntity entity) {
-		// Crea la entidad
-		final BeanPedido pedido = new BeanPedido();
-		pedido.setIdPedido(entity.getIdPedido());
-		pedido.setIdUsuario(entity.getIdUsuario());
-		pedido.setProductos(servicioProductos.fromMapProductos(entity.getProductos()));
-		pedido.setNombreDestinatario(entity.getNombreDestinatario());
-		pedido.setDireccionDestinatario(entity.getDireccionDestinatario());
-		pedido.setCiudadDestinatario(entity.getCiudadDestinatario());
-		pedido.setTelefonoDestinatario(entity.getTelefonoDestinatario());
-		pedido.setFecha(entity.getFecha());
+	@Override public BeanPedido fromEntity(PedidosEntity entity)  {
+		try {
+			// Crea la entidad
+			final BeanPedido pedido = new BeanPedido();
+			pedido.setIdPedido(entity.getIdPedido());
+			pedido.setIdUsuario(entity.getIdUsuario());
+			pedido.setProductos(servicioProductos.fromMapProductos(entity.getProductos()));
+			pedido.setNombreDestinatario(AES.descifrar(entity.getNombreDestinatario()));
+			pedido.setDireccionDestinatario(AES.descifrar(entity.getDireccionDestinatario()));
+			pedido.setCiudadDestinatario(AES.descifrar(entity.getCiudadDestinatario()));
+			pedido.setTelefonoDestinatario(AES.descifrar(entity.getTelefonoDestinatario()));
+			pedido.setFecha(entity.getFecha());
 
-		// La entrega
-		return pedido;
+			// La entrega
+			return pedido;
+
+		} catch (Exception e) {
+			final String error = "No se pudo descifrar la información de envío del pedido";
+			LOGGER.error("Error generando el pedido a partir de la entidad para el ID '{}'. Error: {}", entity.getIdPedido(), error);
+			final ErrorEntidadNoEncontrada eene = new ErrorEntidadNoEncontrada(error);
+			eene.addSuppressed(e);
+			throw eene;
+		}
 	}
 
 }

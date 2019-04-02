@@ -146,6 +146,10 @@ public class TestApiPedidos {
 		pedido1.setIdPedido(UUIDs.timeBased());
 		pedido1.setIdUsuario(UUID.randomUUID().toString());
 		pedido1.setProductos(servicioProductos.fromMapProductos(Map.of(1, 1)));
+		pedido1.setNombreDestinatario("Un nombre");
+		pedido1.setDireccionDestinatario("Una dirección");
+		pedido1.setCiudadDestinatario("Una ciudad");
+		pedido1.setTelefonoDestinatario("Un teléfono");
 		crearPedido(pedido1.toBeanCrearPedido());
 
 		// Intenta crear otro con el mismo ID
@@ -153,6 +157,10 @@ public class TestApiPedidos {
 		pedido2.setIdPedido(pedido1.getIdPedido());
 		pedido2.setIdUsuario(pedido1.getIdUsuario());
 		pedido2.setProductos(servicioProductos.fromMapProductos(Map.of(2, 2)));
+		pedido2.setNombreDestinatario("Un nombre");
+		pedido2.setDireccionDestinatario("Una dirección");
+		pedido2.setCiudadDestinatario("Una ciudad");
+		pedido2.setTelefonoDestinatario("Un teléfono");
 		final ResponseEntity<BeanApiError> error3 = testRestTemplate.postForEntity(MODULO, pedido2, BeanApiError.class);
 		System.out.println(error3);
 		Assert.assertEquals("Error duplicando pedido", HttpStatus.UNPROCESSABLE_ENTITY.value(), error3.getStatusCodeValue());
@@ -166,16 +174,16 @@ public class TestApiPedidos {
 		final BeanPedido pedidoConProductoInexistente = new BeanPedido();
 		pedidoConProductoInexistente.setIdUsuario(UUID.randomUUID().toString());
 		pedidoConProductoInexistente.setProductos(List.of(new BeanCantidadProducto(new BeanDetallesProducto(new Random().nextInt(), "", 0, 0, "", "", ""), 1)));
-		pedidoConProductoInexistente.setNombreDestinatario("");
-		pedidoConProductoInexistente.setDireccionDestinatario("");
-		pedidoConProductoInexistente.setCiudadDestinatario("");
-		pedidoConProductoInexistente.setTelefonoDestinatario("");
+		pedidoConProductoInexistente.setNombreDestinatario("A");
+		pedidoConProductoInexistente.setDireccionDestinatario("B");
+		pedidoConProductoInexistente.setCiudadDestinatario("C");
+		pedidoConProductoInexistente.setTelefonoDestinatario("D");
 		final ResponseEntity<BeanApiError> error5 = testRestTemplate.postForEntity(MODULO, pedidoConProductoInexistente, BeanApiError.class);
 		System.out.println(error5);
 		Assert.assertEquals("Error creando pedido con producto inexistente", HttpStatus.NOT_FOUND.value(), error5.getStatusCodeValue());
 
 		// Intenta crear pedido con cantidades por fuera del inventario
-		final BeanCrearPedido pedido3 = new BeanCrearPedido(null, UUID.randomUUID().toString(), List.of(new BeanProducto(2, Integer.MAX_VALUE)), null, null, null, null, null);
+		final BeanCrearPedido pedido3 = new BeanCrearPedido(null, UUID.randomUUID().toString(), List.of(new BeanProducto(2, Integer.MAX_VALUE)), "A", "B", "C", "D", null);
 		final ResponseEntity<BeanApiError> error6 = testRestTemplate.postForEntity(MODULO, pedido3, BeanApiError.class);
 		System.out.println(error6);
 		Assert.assertEquals("Error creando pedido por más unidades de las disponibles en el inventario", HttpStatus.UNPROCESSABLE_ENTITY.value(), error6.getStatusCodeValue());
