@@ -29,6 +29,10 @@ spring:
     redis:
         host: redis
         port: 6379
+logging:
+    file: app/pedidosga.log
+    max-size: 2MB
+    max-history: 5
 pedidosga:
     urlApiProductos: https://fvwzxk56cg.execute-api.us-east-1.amazonaws.com/mock/productos/{idProducto}
 
@@ -44,5 +48,9 @@ spring:
     redis:
         host: redis
         port: 6379
+logging:
+    file: app/logs/pedidosga.log
+    max-size: 10MB
+    max-history: 5
 pedidosga:
     urlApiProductos: https://fvwzxk56cg.execute-api.us-east-1.amazonaws.com/mock/productos/{idProducto}
