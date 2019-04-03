@@ -34,8 +34,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 @Import(RestTemplateConfiguration.class)
 public class TestApiCarrito {
 
-	private static final String ID_USUARIO = UUID.randomUUID().toString();
-	private static final String ID_USUARIO_EX = UUID.randomUUID().toString();
+	private static final String ID_USUARIO = "1184ae2f-fbfb-4066-a5e3-727daf089439";
+	private static final String ID_USUARIO_EX = "a1b60552-3cca-4002-a7f7-502aa1dac4b8";
 	private static final String MODULO = "/carrito/";
 	
 	@Autowired

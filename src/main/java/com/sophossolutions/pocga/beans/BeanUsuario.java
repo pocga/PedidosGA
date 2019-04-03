@@ -11,7 +11,8 @@ public class BeanUsuario implements Serializable {
 
 	private String idUsuario;
 	private String email;
-	private String name;
+	private String nombres;
+	private String apellidos;
 
 	public BeanUsuario() {
 	}
@@ -19,11 +20,13 @@ public class BeanUsuario implements Serializable {
 	public BeanUsuario(String idUsuario) {
 		this.idUsuario = idUsuario;
 		this.email = idUsuario;
-		this.name = idUsuario;
+		this.nombres = idUsuario;
+		this.apellidos = idUsuario;
 	}
 
-	@Override public String toString() {
-		return "BeanUsuario{" + "idUsuario=" + idUsuario + ", email=" + email + ", name=" + name + '}';
+	@Override
+	public String toString() {
+		return "BeanUsuario{" + "idUsuario=" + idUsuario + ", email=" + email + ", nombres=" + nombres + ", apellidos=" + apellidos + '}';
 	}
 
 	@Override public int hashCode() {
@@ -62,12 +65,20 @@ public class BeanUsuario implements Serializable {
 		this.email = email;
 	}
 
-	public String getName() {
-		return name;
+	public String getNombres() {
+		return nombres;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setNombres(String nombres) {
+		this.nombres = nombres;
+	}
+
+	public String getApellidos() {
+		return apellidos;
+	}
+
+	public void setApellidos(String apellidos) {
+		this.apellidos = apellidos;
 	}
 
 }

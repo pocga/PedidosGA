@@ -2,9 +2,7 @@ package com.sophossolutions.pocga.test;
 
 import com.datastax.driver.core.utils.UUIDs;
 import com.sophossolutions.pocga.beans.BeanApiError;
-import com.sophossolutions.pocga.beans.BeanCantidadProducto;
 import com.sophossolutions.pocga.beans.BeanCrearPedido;
-import com.sophossolutions.pocga.beans.BeanDetallesProducto;
 import com.sophossolutions.pocga.beans.BeanPedido;
 import com.sophossolutions.pocga.beans.BeanProducto;
 import com.sophossolutions.pocga.beans.BeanTotales;
@@ -44,7 +42,8 @@ import org.springframework.web.client.RestClientException;
 public class TestApiPedidos {
 	
 	private static final UUID ID_PEDIDO = UUIDs.timeBased();
-	private static final String ID_USUARIO = UUID.randomUUID().toString();
+	private static final String ID_USUARIO = "75410a99-4011-4662-81e6-4514d3a48e77";
+	private static final String ID_USUARIO_EX = "4fc8d378-e2aa-49ff-8f95-2465bcc68d25";
 	private static final String MODULO = "/pedidos/";
 
 	@Autowired
@@ -97,7 +96,7 @@ public class TestApiPedidos {
 
 		// Adiciona otro pedido
 		final BeanPedido pedidoEsperado2 = new BeanPedido();
-		pedidoEsperado2.setUsuario(new BeanUsuario(ID_USUARIO));
+		pedidoEsperado2.setUsuario(pedidoEsperado1.getUsuario());
 		pedidoEsperado2.setProductos(servicioProductos.fromMapProductos(Map.of(4, 1)));
 		pedidoEsperado2.setNombreDestinatario("Ana");
 		pedidoEsperado2.setDireccionDestinatario("CIR 3 71 59");
@@ -145,7 +144,7 @@ public class TestApiPedidos {
 		// Crea un pedido
 		final BeanPedido pedido1 = new BeanPedido();
 		pedido1.setIdPedido(UUIDs.timeBased());
-		pedido1.setUsuario(new BeanUsuario(UUID.randomUUID().toString()));
+		pedido1.setUsuario(new BeanUsuario(ID_USUARIO_EX));
 		pedido1.setProductos(servicioProductos.fromMapProductos(Map.of(1, 1)));
 		pedido1.setNombreDestinatario("Un nombre");
 		pedido1.setDireccionDestinatario("Una dirección");
@@ -173,7 +172,7 @@ public class TestApiPedidos {
 		
 		// Crear pedido con producto inexistente
 		final BeanCrearPedido pedidoConProductoInexistente = new BeanCrearPedido();
-		pedidoConProductoInexistente.setIdUsuario(UUID.randomUUID().toString());
+		pedidoConProductoInexistente.setIdUsuario(ID_USUARIO_EX);
 		pedidoConProductoInexistente.setProductos(List.of(new BeanProducto(new Random().nextInt(), 1)));
 		pedidoConProductoInexistente.setNombreDestinatario("A");
 		pedidoConProductoInexistente.setDireccionDestinatario("B");
@@ -184,7 +183,7 @@ public class TestApiPedidos {
 		Assert.assertEquals("Error creando pedido con producto inexistente", HttpStatus.NOT_FOUND.value(), error5.getStatusCodeValue());
 
 		// Intenta crear pedido con cantidades por fuera del inventario
-		final BeanCrearPedido pedido3 = new BeanCrearPedido(null, UUID.randomUUID().toString(), List.of(new BeanProducto(2, Integer.MAX_VALUE)), "A", "B", "C", "D", null);
+		final BeanCrearPedido pedido3 = new BeanCrearPedido(null, ID_USUARIO_EX, List.of(new BeanProducto(2, Integer.MAX_VALUE)), "A", "B", "C", "D", null);
 		final ResponseEntity<BeanApiError> error6 = testRestTemplate.postForEntity(MODULO, pedido3, BeanApiError.class);
 		System.out.println(error6);
 		Assert.assertEquals("Error creando pedido por más unidades de las disponibles en el inventario", HttpStatus.UNPROCESSABLE_ENTITY.value(), error6.getStatusCodeValue());

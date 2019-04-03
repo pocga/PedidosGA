@@ -2,9 +2,11 @@ spring.profiles.active: dev
 spring.cache.type: redis
 spring.cache.redis.time-to-live: 60000
 
-pedidosga.awsCognitoGroupId: us-east-1_CVePKGhTu
-pedidosga.awsAccessKey: yAVSrZiMimn8pFSFAlli_lje1qxSnmL_aoxCfSuMhkQ
-pedidosga.awsSecretKey: 9pITKY-ng4PEaEX7GtUqcdk6L8sIIKMSmtzKt3haSU3hbPgIt-xz4TrMGHR8n5zu
+pedidosga:
+    aws:
+        cognitoGroupId: us-east-1_CVePKGhTu
+        accessKey: yAVSrZiMimn8pFSFAlli_lje1qxSnmL_aoxCfSuMhkQ
+        secretKey: 9pITKY-ng4PEaEX7GtUqcdk6L8sIIKMSmtzKt3haSU3hbPgIt-xz4TrMGHR8n5zu
 
 ---
 
@@ -38,7 +40,7 @@ logging:
     max-size: 2MB
     max-history: 5
 pedidosga:
-    urlApiProductos: https://fvwzxk56cg.execute-api.us-east-1.amazonaws.com/mock/productos/{idProducto}
+    urlApiProductos: https://jsc2p92uk1.execute-api.us-east-1.amazonaws.com/v1/catalogo/productos/{idProducto}
 
 ---
 
@@ -57,4 +59,4 @@ logging:
     max-size: 10MB
     max-history: 5
 pedidosga:
-    urlApiProductos: https://fvwzxk56cg.execute-api.us-east-1.amazonaws.com/mock/productos/{idProducto}
+    urlApiProductos: http://catalogoga:4000/catalogo/productos/{idProducto}

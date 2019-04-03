@@ -29,16 +29,13 @@ public class ServicioUsuarios {
 	/** Logger */
 	private static final Logger LOGGER = LoggerFactory.getLogger(ServicioUsuarios.class);
 	
-	@Value("${spring.profiles.active}")
-	private String activeProfile;
-
-	@Value("${pedidosga.awsCognitoGroupId}")
+	@Value("${pedidosga.aws.cognitoGroupId}")
 	private String awsCognitoGroupId;
 
-	@Value("${pedidosga.awsAccessKey}")
+	@Value("${pedidosga.aws.accessKey}")
 	private String awsAccessKey;
 
-	@Value("${pedidosga.awsSecretKey}")
+	@Value("${pedidosga.aws.secretKey}")
 	private String awsSecretKey;
 	
 	
@@ -47,12 +44,6 @@ public class ServicioUsuarios {
 		try {
 			// Crea el bean
 			final BeanUsuario usuario = new BeanUsuario(idUsuario);
-
-			// Control
-			if(activeProfile.equals("dev")) {
-				LOGGER.warn("Perfil de desarrollo. No se busca el usuario en AWS Cognito y se retorna el mismo ID");
-				return usuario;
-			}
 
 			// Provee las credenciales
 			AWSCredentialsProvider credentialsProvider;
@@ -83,7 +74,10 @@ public class ServicioUsuarios {
 					usuario.setEmail(attribute.getValue());
 				}
 				if(attribute.getName().equals("name")) {
-					usuario.setName(attribute.getValue());
+					usuario.setNombres(attribute.getValue());
+				}
+				if(attribute.getName().equals("family_name")) {
+					usuario.setApellidos(attribute.getValue());
 				}
 			});
 
