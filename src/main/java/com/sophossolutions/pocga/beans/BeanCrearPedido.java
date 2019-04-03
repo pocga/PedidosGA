@@ -136,7 +136,7 @@ public class BeanCrearPedido implements Comparable<BeanCrearPedido> {
 	public BeanPedido toBeanPedido() {
 		final BeanPedido pedido = new BeanPedido();
 		pedido.setIdPedido(idPedido);
-		pedido.setIdUsuario(idUsuario);
+		pedido.setUsuario(new BeanUsuario(idUsuario));
 		pedido.setProductos(servicioProductos.fromMapProductos(BeanProducto.toMap(productos)));
 		pedido.setNombreDestinatario(nombreDestinatario);
 		pedido.setDireccionDestinatario(direccionDestinatario);

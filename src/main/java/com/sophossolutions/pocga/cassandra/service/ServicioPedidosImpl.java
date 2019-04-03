@@ -223,7 +223,7 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 
 		// Trae el nombre del usuario de cognito a partir del ID
 		try {
-			pedido.setIdUsuario(servicioUsuarios.getUserByIdUsuario(entity.getIdUsuario()).getEmail());
+			pedido.setUsuario(servicioUsuarios.getUserByIdUsuario(entity.getIdUsuario()));
 		} catch (Exception e) {
 			final String error = "No se pudo obtener el nombre del usuario '" + entity.getIdUsuario() + "'";
 			LOGGER.error("Error generando el pedido a partir de la entidad para el ID '{}'. Error: {}", entity.getIdPedido(), error);

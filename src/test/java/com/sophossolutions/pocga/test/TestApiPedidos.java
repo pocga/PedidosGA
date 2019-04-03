@@ -8,6 +8,7 @@ import com.sophossolutions.pocga.beans.BeanDetallesProducto;
 import com.sophossolutions.pocga.beans.BeanPedido;
 import com.sophossolutions.pocga.beans.BeanProducto;
 import com.sophossolutions.pocga.beans.BeanTotales;
+import com.sophossolutions.pocga.beans.BeanUsuario;
 import com.sophossolutions.pocga.redis.service.ServicioProductos;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -80,7 +81,7 @@ public class TestApiPedidos {
 		// Crea un pedido
 		final BeanPedido pedidoEsperado1 = new BeanPedido();
 		pedidoEsperado1.setIdPedido(ID_PEDIDO);
-		pedidoEsperado1.setIdUsuario(ID_USUARIO);
+		pedidoEsperado1.setUsuario(new BeanUsuario(ID_USUARIO));
 		pedidoEsperado1.setProductos(List.of(servicioProductos.fromBeanProducto(producto1)));
 		pedidoEsperado1.setFecha(LocalDateTime.now());
 		pedidoEsperado1.setNombreDestinatario("Ricardo");
@@ -96,7 +97,7 @@ public class TestApiPedidos {
 
 		// Adiciona otro pedido
 		final BeanPedido pedidoEsperado2 = new BeanPedido();
-		pedidoEsperado2.setIdUsuario(ID_USUARIO);
+		pedidoEsperado2.setUsuario(new BeanUsuario(ID_USUARIO));
 		pedidoEsperado2.setProductos(servicioProductos.fromMapProductos(Map.of(4, 1)));
 		pedidoEsperado2.setNombreDestinatario("Ana");
 		pedidoEsperado2.setDireccionDestinatario("CIR 3 71 59");
@@ -120,7 +121,7 @@ public class TestApiPedidos {
 		Assert.assertEquals(
 			"Debería quedar sólo un pedido para el usuario", 
 			1, 
-			listaPedidosReal.stream().filter(bp -> bp.getIdUsuario().equals(ID_USUARIO)).collect(Collectors.toList()).size()
+			listaPedidosReal.stream().filter(bp -> bp.getUsuario().getIdUsuario().equals(ID_USUARIO)).collect(Collectors.toList()).size()
 		);
 	}
 	
@@ -144,7 +145,7 @@ public class TestApiPedidos {
 		// Crea un pedido
 		final BeanPedido pedido1 = new BeanPedido();
 		pedido1.setIdPedido(UUIDs.timeBased());
-		pedido1.setIdUsuario(UUID.randomUUID().toString());
+		pedido1.setUsuario(new BeanUsuario(UUID.randomUUID().toString()));
 		pedido1.setProductos(servicioProductos.fromMapProductos(Map.of(1, 1)));
 		pedido1.setNombreDestinatario("Un nombre");
 		pedido1.setDireccionDestinatario("Una dirección");
@@ -153,10 +154,10 @@ public class TestApiPedidos {
 		crearPedido(pedido1.toBeanCrearPedido());
 
 		// Intenta crear otro con el mismo ID
-		final BeanPedido pedido2 = new BeanPedido();
+		final BeanCrearPedido pedido2 = new BeanCrearPedido();
 		pedido2.setIdPedido(pedido1.getIdPedido());
-		pedido2.setIdUsuario(pedido1.getIdUsuario());
-		pedido2.setProductos(servicioProductos.fromMapProductos(Map.of(2, 2)));
+		pedido2.setIdUsuario(pedido1.getUsuario().getIdUsuario());
+		pedido2.setProductos(List.of(new BeanProducto(2, 2)));
 		pedido2.setNombreDestinatario("Un nombre");
 		pedido2.setDireccionDestinatario("Una dirección");
 		pedido2.setCiudadDestinatario("Una ciudad");
@@ -171,9 +172,9 @@ public class TestApiPedidos {
 		Assert.assertEquals("Error borrando pedido inexistente", HttpStatus.NOT_FOUND.value(), error4.getStatusCodeValue());
 		
 		// Crear pedido con producto inexistente
-		final BeanPedido pedidoConProductoInexistente = new BeanPedido();
+		final BeanCrearPedido pedidoConProductoInexistente = new BeanCrearPedido();
 		pedidoConProductoInexistente.setIdUsuario(UUID.randomUUID().toString());
-		pedidoConProductoInexistente.setProductos(List.of(new BeanCantidadProducto(new BeanDetallesProducto(new Random().nextInt(), "", 0, 0, "", "", ""), 1)));
+		pedidoConProductoInexistente.setProductos(List.of(new BeanProducto(new Random().nextInt(), 1)));
 		pedidoConProductoInexistente.setNombreDestinatario("A");
 		pedidoConProductoInexistente.setDireccionDestinatario("B");
 		pedidoConProductoInexistente.setCiudadDestinatario("C");

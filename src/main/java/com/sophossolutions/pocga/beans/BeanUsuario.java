@@ -12,6 +12,15 @@ public class BeanUsuario implements Serializable {
 	private String email;
 	private String name;
 
+	public BeanUsuario() {
+	}
+
+	public BeanUsuario(String idUsuario) {
+		this.idUsuario = idUsuario;
+		this.email = idUsuario;
+		this.name = idUsuario;
+	}
+
 	public String getIdUsuario() {
 		return idUsuario;
 	}

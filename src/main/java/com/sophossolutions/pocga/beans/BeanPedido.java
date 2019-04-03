@@ -14,7 +14,7 @@ import java.util.UUID;
 public class BeanPedido implements Comparable<BeanPedido>, Serializable {
 	
 	private UUID idPedido;
-	private String idUsuario;
+	private BeanUsuario usuario;
 	private List<BeanCantidadProducto> productos;
 	private String nombreDestinatario;
 	private String direccionDestinatario;
@@ -26,9 +26,9 @@ public class BeanPedido implements Comparable<BeanPedido>, Serializable {
 	public BeanPedido() {
 	}
 
-	public BeanPedido(UUID idPedido, String idUsuario, List<BeanCantidadProducto> productos, String nombreDestinatario, String direccionDestinatario, String ciudadDestinatario, String telefonoDestinatario, LocalDateTime fecha) {
+	public BeanPedido(UUID idPedido, BeanUsuario usuario, List<BeanCantidadProducto> productos, String nombreDestinatario, String direccionDestinatario, String ciudadDestinatario, String telefonoDestinatario, LocalDateTime fecha) {
 		this.idPedido = idPedido;
-		this.idUsuario = idUsuario;
+		this.usuario = usuario;
 		this.productos = productos;
 		this.nombreDestinatario = nombreDestinatario;
 		this.direccionDestinatario = direccionDestinatario;
@@ -38,7 +38,7 @@ public class BeanPedido implements Comparable<BeanPedido>, Serializable {
 	}
 
 	@Override public String toString() {
-		return "BeanPedido{" + "idPedido=" + idPedido + ", idUsuario=" + idUsuario + ", productos=" + productos + ", nombreDestinatario=" + nombreDestinatario + ", direccionDestinatario=" + direccionDestinatario + ", ciudadDestinatario=" + ciudadDestinatario + ", telefonoDestinatario=" + telefonoDestinatario + ", fecha=" + fecha + '}';
+		return "BeanPedido{" + "idPedido=" + idPedido + ", usuario=" + usuario + ", productos=" + productos + ", nombreDestinatario=" + nombreDestinatario + ", direccionDestinatario=" + direccionDestinatario + ", ciudadDestinatario=" + ciudadDestinatario + ", telefonoDestinatario=" + telefonoDestinatario + ", fecha=" + fecha + '}';
 	}
 
 	@Override public int hashCode() {
@@ -69,12 +69,12 @@ public class BeanPedido implements Comparable<BeanPedido>, Serializable {
 		this.idPedido = idPedido;
 	}
 
-	public String getIdUsuario() {
-		return idUsuario;
+	public BeanUsuario getUsuario() {
+		return usuario;
 	}
 
-	public void setIdUsuario(String idUsuario) {
-		this.idUsuario = idUsuario;
+	public void setUsuario(BeanUsuario usuario) {
+		this.usuario = usuario;
 	}
 
 	public List<BeanCantidadProducto> getProductos() {
@@ -136,7 +136,7 @@ public class BeanPedido implements Comparable<BeanPedido>, Serializable {
 	public BeanCrearPedido toBeanCrearPedido() {
 		final BeanCrearPedido crear = new BeanCrearPedido();
 		crear.setIdPedido(idPedido);
-		crear.setIdUsuario(idUsuario);
+		crear.setIdUsuario(usuario.getIdUsuario());
 		crear.setProductos(BeanProducto.toListProductos(productos));
 		crear.setNombreDestinatario(nombreDestinatario);
 		crear.setDireccionDestinatario(direccionDestinatario);
