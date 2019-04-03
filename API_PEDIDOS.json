@@ -717,9 +717,6 @@
         "BeanDetallesCarrito": {
             "type": "object",
             "properties": {
-                "idUsuario": {
-                    "type": "string"
-                },
                 "productos": {
                     "type": "array",
                     "items": {
@@ -728,6 +725,9 @@
                 },
                 "totales": {
                     "$ref": "#/definitions/BeanTotales"
+                },
+                "usuario": {
+                    "$ref": "#/definitions/BeanUsuario"
                 }
             },
             "title": "BeanDetallesCarrito"
@@ -779,9 +779,6 @@
                     "type": "string",
                     "format": "uuid"
                 },
-                "idUsuario": {
-                    "type": "string"
-                },
                 "nombreDestinatario": {
                     "type": "string"
                 },
@@ -793,6 +790,9 @@
                 },
                 "telefonoDestinatario": {
                     "type": "string"
+                },
+                "usuario": {
+                    "$ref": "#/definitions/BeanUsuario"
                 }
             },
             "title": "BeanPedido"
@@ -824,6 +824,21 @@
                 }
             },
             "title": "BeanTotales"
+        },
+        "BeanUsuario": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "idUsuario": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "title": "BeanUsuario"
         }
     }
 }
