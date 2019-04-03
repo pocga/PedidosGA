@@ -1,7 +1,10 @@
 spring.profiles.active: dev
 spring.cache.type: redis
 spring.cache.redis.time-to-live: 60000
-application.message: API PedidosGA
+
+pedidosga.awsCognitoGroupId: us-east-1_CVePKGhTu
+pedidosga.awsAccessKey: yAVSrZiMimn8pFSFAlli_lje1qxSnmL_aoxCfSuMhkQ
+pedidosga.awsSecretKey: 9pITKY-ng4PEaEX7GtUqcdk6L8sIIKMSmtzKt3haSU3hbPgIt-xz4TrMGHR8n5zu
 
 ---
 

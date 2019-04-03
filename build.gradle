@@ -46,7 +46,8 @@ dependencies {
 	
 	compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
 	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
-
+	compile group: 'com.amazonaws', name: 'aws-java-sdk-cognitoidp', version: '1.11.530'
+	
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

@@ -57,5 +57,5 @@ public interface ServicioPedidos {
 	 * @return 
 	 */
 	BeanPedido fromEntity(PedidosEntity entity);
-
+	
 }

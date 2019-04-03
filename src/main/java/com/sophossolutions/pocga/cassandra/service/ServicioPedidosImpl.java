@@ -12,6 +12,7 @@ import com.sophossolutions.pocga.beans.BeanProducto;
 import com.sophossolutions.pocga.cassandra.entity.PedidosEntity;
 import com.sophossolutions.pocga.cassandra.repository.PedidosRepository;
 import com.sophossolutions.pocga.redis.service.ServicioProductos;
+import com.sophossolutions.pocga.redis.service.ServicioUsuarios;
 import com.sophossolutions.pocga.utils.AES;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -49,7 +50,10 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 
 	@Autowired
 	private ServicioProductos servicioProductos;
-
+	
+	@Autowired
+	private ServicioUsuarios servicioUsuarios;
+	
 	@Override public List<BeanPedido> getPedidos() {
 		// Consulta todos los pedidos
 		final Iterable<PedidosEntity> entidades = repository.findAll();
@@ -209,21 +213,31 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 	}
 
 	@Override public BeanPedido fromEntity(PedidosEntity entity)  {
+		// Crea el objeto
+		final BeanPedido pedido = new BeanPedido();
+
+		// Asigna los valores generales
+		pedido.setIdPedido(entity.getIdPedido());
+		pedido.setProductos(servicioProductos.fromMapProductos(entity.getProductos()));
+		pedido.setFecha(entity.getFecha());
+
+		// Trae el nombre del usuario de cognito a partir del ID
 		try {
-			// Crea la entidad
-			final BeanPedido pedido = new BeanPedido();
-			pedido.setIdPedido(entity.getIdPedido());
-			pedido.setIdUsuario(entity.getIdUsuario());
-			pedido.setProductos(servicioProductos.fromMapProductos(entity.getProductos()));
+			pedido.setIdUsuario(servicioUsuarios.getUserByIdUsuario(entity.getIdUsuario()).getEmail());
+		} catch (Exception e) {
+			final String error = "No se pudo obtener el nombre del usuario '" + entity.getIdUsuario() + "'";
+			LOGGER.error("Error generando el pedido a partir de la entidad para el ID '{}'. Error: {}", entity.getIdPedido(), error);
+			final ErrorEntidadNoEncontrada eene = new ErrorEntidadNoEncontrada(error);
+			eene.addSuppressed(e);
+			throw eene;
+		}
+
+		// Descifra la información
+		try {
 			pedido.setNombreDestinatario(AES.descifrar(entity.getNombreDestinatario()));
 			pedido.setDireccionDestinatario(AES.descifrar(entity.getDireccionDestinatario()));
 			pedido.setCiudadDestinatario(AES.descifrar(entity.getCiudadDestinatario()));
 			pedido.setTelefonoDestinatario(AES.descifrar(entity.getTelefonoDestinatario()));
-			pedido.setFecha(entity.getFecha());
-
-			// La entrega
-			return pedido;
-
 		} catch (Exception e) {
 			final String error = "No se pudo descifrar la información de envío del pedido";
 			LOGGER.error("Error generando el pedido a partir de la entidad para el ID '{}'. Error: {}", entity.getIdPedido(), error);
@@ -231,6 +245,9 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 			eene.addSuppressed(e);
 			throw eene;
 		}
+
+		// Entrega la instancia
+		return pedido;
 	}
 
 }
