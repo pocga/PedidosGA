@@ -5,6 +5,7 @@ import com.sophossolutions.pocga.beans.BeanCantidad;
 import com.sophossolutions.pocga.beans.BeanDetallesCarrito;
 import com.sophossolutions.pocga.beans.BeanProducto;
 import com.sophossolutions.pocga.beans.BeanTotales;
+import com.sophossolutions.pocga.beans.BeanUsuario;
 import com.sophossolutions.pocga.redis.service.ServicioProductos;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +65,7 @@ public class TestApiCarrito {
 		
 		// Carrito esperado
 		final BeanDetallesCarrito carritoEsperado = new BeanDetallesCarrito();
-		carritoEsperado.setIdUsuario(ID_USUARIO);
+		carritoEsperado.setUsuario(new BeanUsuario(ID_USUARIO));
 		carritoEsperado.setProductos(new ArrayList<>());
 
 		// Adiciona un producto
@@ -121,7 +122,7 @@ public class TestApiCarrito {
 		
 		// Elimina el producto 1, y se debe eliminar el carrito
 		eliminarProducto(producto1);
-		carritoEsperado.setIdUsuario(null);
+		carritoEsperado.setUsuario(null);
 		carritoEsperado.setProductos(null);
 		carritoEsperado.setTotales(null);
 		validarCarrito(carritoEsperado, "Vaciar el carrito");

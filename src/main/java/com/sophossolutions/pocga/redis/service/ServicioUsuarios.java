@@ -10,6 +10,7 @@ import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProviderClientBuilder
 import com.amazonaws.services.cognitoidp.model.AdminGetUserRequest;
 import com.amazonaws.services.cognitoidp.model.AdminGetUserResult;
 import com.amazonaws.services.cognitoidp.model.InvalidParameterException;
+import com.sophossolutions.pocga.api.exceptions.ErrorEntidadNoEncontrada;
 import com.sophossolutions.pocga.beans.BeanUsuario;
 import com.sophossolutions.pocga.utils.AES;
 import org.slf4j.Logger;
@@ -43,53 +44,59 @@ public class ServicioUsuarios {
 	
 	@Cacheable(cacheNames = "usuarios", key = "#idUsuario")
 	public BeanUsuario getUserByIdUsuario(String idUsuario) {
-		// Crea el bean
-		final BeanUsuario usuario = new BeanUsuario();
-		usuario.setIdUsuario(idUsuario);
-
-		// Control
-		if(activeProfile.equals("dev")) {
-			LOGGER.warn("Perfil de desarrollo. No se busca el usuario en AWS Cognito y se retorna el mismo ID");
-			usuario.setEmail(idUsuario);
-			usuario.setName(idUsuario);
-			return usuario;
-		}
-
-		// Provee las credenciales
-		AWSCredentialsProvider credentialsProvider;
 		try {
-			final AWSCredentials credentials = new BasicAWSCredentials(AES.descifrar(awsAccessKey), AES.descifrar(awsSecretKey));
-			credentialsProvider = new AWSStaticCredentialsProvider(credentials);
-		} catch (Exception e) {
-			throw new InvalidParameterException("No fue posible descifrar los datos de acceso a AWS Cognito -> " + e.getLocalizedMessage());
+			// Crea el bean
+			final BeanUsuario usuario = new BeanUsuario(idUsuario);
+
+			// Control
+			if(activeProfile.equals("dev")) {
+				LOGGER.warn("Perfil de desarrollo. No se busca el usuario en AWS Cognito y se retorna el mismo ID");
+				return usuario;
+			}
+
+			// Provee las credenciales
+			AWSCredentialsProvider credentialsProvider;
+			try {
+				final AWSCredentials credentials = new BasicAWSCredentials(AES.descifrar(awsAccessKey), AES.descifrar(awsSecretKey));
+				credentialsProvider = new AWSStaticCredentialsProvider(credentials);
+			} catch (Exception e) {
+				throw new InvalidParameterException("No fue posible descifrar los datos de acceso a AWS Cognito -> " + e.getLocalizedMessage());
+			}
+
+			// Crea el cliente
+			final AWSCognitoIdentityProvider cognitoClient = AWSCognitoIdentityProviderClientBuilder.standard()
+				.withCredentials(credentialsProvider)
+				.withRegion(Regions.US_EAST_1)
+				.build()
+			;
+
+			// Genera la consulta del usuario dentro del pool
+			final AdminGetUserRequest userRequest = new AdminGetUserRequest()
+				.withUsername(idUsuario)
+				.withUserPoolId(awsCognitoGroupId)
+			;
+
+			// Filtra los resultados para entregar el email
+			final AdminGetUserResult userResult = cognitoClient.adminGetUser(userRequest);
+			userResult.getUserAttributes().forEach(attribute -> {
+				if(attribute.getName().equals("email")) {
+					usuario.setEmail(attribute.getValue());
+				}
+				if(attribute.getName().equals("name")) {
+					usuario.setName(attribute.getValue());
+				}
+			});
+
+			// Entrega el correo
+			return usuario;
+
+		} catch (RuntimeException e) {
+			final String error = "Error buscando datos en AWS Cognito -> " + e.getLocalizedMessage();
+			LOGGER.error("Error obteniendo los datos de Cognito para el usuario '{}'. Error: {}", idUsuario, error);
+			final ErrorEntidadNoEncontrada eene = new ErrorEntidadNoEncontrada(error);
+			eene.addSuppressed(e);
+			throw eene;
 		}
-
-		// Crea el cliente
-		final AWSCognitoIdentityProvider cognitoClient = AWSCognitoIdentityProviderClientBuilder.standard()
-			.withCredentials(credentialsProvider)
-			.withRegion(Regions.US_EAST_1)
-			.build()
-		;
-
-		// Genera la consulta del usuario dentro del pool
-		final AdminGetUserRequest userRequest = new AdminGetUserRequest()
-			.withUsername(idUsuario)
-			.withUserPoolId(awsCognitoGroupId)
-		;
-
-		// Filtra los resultados para entregar el email
-		final AdminGetUserResult userResult = cognitoClient.adminGetUser(userRequest);
-		userResult.getUserAttributes().forEach(attribute -> {
-			if(attribute.getName().equals("email")) {
-				usuario.setEmail(attribute.getValue());
-			}
-			if(attribute.getName().equals("name")) {
-				usuario.setName(attribute.getValue());
-			}
-		});
-
-		// Entrega el correo
-		return usuario;
 	}
 
 }

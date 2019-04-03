@@ -9,28 +9,22 @@ import java.util.Objects;
  */
 public class BeanDetallesCarrito {
 	
-	private String idUsuario;
+	private BeanUsuario usuario;
 	private List<BeanCantidadProducto> productos;
 	private BeanTotales totales;
 
 	public BeanDetallesCarrito() {
 	}
 
-	public BeanDetallesCarrito(String idUsuario, List<BeanCantidadProducto> productos, BeanTotales totales) {
-		this.idUsuario = idUsuario;
-		this.productos = productos;
-		this.totales = totales;
-	}
-
 	@Override public String toString() {
-		return "BeanDetallesCarrito{" + "idUsuario=" + idUsuario + ", productos=" + productos + ", totales=" + totales + '}';
+		return "BeanDetallesCarrito{" + "idUsuario=" + usuario + ", productos=" + productos + ", totales=" + totales + '}';
 	}
 
 	@Override public int hashCode() {
-		int hash = 7;
-		hash = 31 * hash + Objects.hashCode(this.idUsuario);
-		hash = 31 * hash + Objects.hashCode(this.productos);
-		hash = 31 * hash + Objects.hashCode(this.totales);
+		int hash = 5;
+		hash = 79 * hash + Objects.hashCode(this.usuario);
+		hash = 79 * hash + Objects.hashCode(this.productos);
+		hash = 79 * hash + Objects.hashCode(this.totales);
 		return hash;
 	}
 
@@ -45,21 +39,21 @@ public class BeanDetallesCarrito {
 			return false;
 		}
 		final BeanDetallesCarrito other = (BeanDetallesCarrito) obj;
-		if (!Objects.equals(this.idUsuario, other.idUsuario)) {
+		if (!Objects.equals(this.usuario, other.usuario)) {
 			return false;
 		}
 		if (!Objects.equals(this.productos, other.productos)) {
 			return false;
 		}
 		return Objects.equals(this.totales, other.totales);
+	}	
+
+	public BeanUsuario getUsuario() {
+		return usuario;
 	}
 
-	public String getIdUsuario() {
-		return idUsuario;
-	}
-
-	public void setIdUsuario(String idUsuario) {
-		this.idUsuario = idUsuario;
+	public void setUsuario(BeanUsuario usuario) {
+		this.usuario = usuario;
 	}
 
 	public List<BeanCantidadProducto> getProductos() {

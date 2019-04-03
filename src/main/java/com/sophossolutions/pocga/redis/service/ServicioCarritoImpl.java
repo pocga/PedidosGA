@@ -41,6 +41,9 @@ public class ServicioCarritoImpl implements ServicioCarrito {
 	@Autowired
 	private ServicioProductos servicioProductos;
 	
+	@Autowired
+	private ServicioUsuarios servicioUsuarios;
+	
 	@Override public BeanDetallesCarrito getCarrito(String idUsuario) {
 		// Consulta
 		final Optional<CarritoEntity> optional = repository.findById(idUsuario);
@@ -71,7 +74,7 @@ public class ServicioCarritoImpl implements ServicioCarrito {
 		// Arma y entrega los detalles
 		LOGGER.info("Consulta del carrito del usuario '{}' exitosa", idUsuario);
 		final BeanDetallesCarrito detalles = new BeanDetallesCarrito();
-		detalles.setIdUsuario(idUsuario);
+		detalles.setUsuario(servicioUsuarios.getUserByIdUsuario(idUsuario));
 		detalles.setProductos(listaProductos);
 		detalles.setTotales(getTotalesCarrito(listaProductos));
 		return detalles;
