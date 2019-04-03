@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
+import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,16 +109,24 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 	@Override public BeanPedido crearPedido(BeanCrearPedido pedido) {
 		// Validación
 		final Map<String, String> datosEnvio = Map.of(
-			"nombre", pedido.getNombreDestinatario(), 
-			"dirección", pedido.getDireccionDestinatario(), 
-			"ciudad", pedido.getCiudadDestinatario(), 
-			"teléfono", pedido.getTelefonoDestinatario()
+			"idUsuario", pedido.getIdUsuario(), 
+			"nombreDestinatario", pedido.getNombreDestinatario(), 
+			"direccionDestinatario", pedido.getDireccionDestinatario(), 
+			"ciudadDestinatario", pedido.getCiudadDestinatario(), 
+			"telefonoDestinatario", pedido.getTelefonoDestinatario()
 		);
 		datosEnvio.forEach((campo, valor) -> {
-			if(valor.isBlank()) {
-				throw new ErrorCreandoEntidad("No especificó un valor para el campo '" + campo + "'. Valor ingresado: '" + valor + "'");
+			if(Strings.isBlank(valor)) {
+				final String error = "No especificó un valor para el campo '" + campo + "'. Valor ingresado: '" + valor + "'";
+				LOGGER.error(PLANTILLA_LOGGER_ERROR_ADICIONANDO, pedido.getIdPedido(), error);
+				throw new ErrorCreandoEntidad(error);
 			}
 		});
+		if(pedido.getProductos().isEmpty()) {
+			final String error = "No especificó los productos que conforman el pedido'. Valor ingresado: '" + pedido.getProductos() + "'";
+			LOGGER.error(PLANTILLA_LOGGER_ERROR_ADICIONANDO, pedido.getIdPedido(), error);
+			throw new ErrorCreandoEntidad(error);
+		}
 
 		// Ya existe
 		if(pedido.getIdPedido() != null && repository.existsById(pedido.getIdPedido())) {
