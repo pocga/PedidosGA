@@ -28,10 +28,10 @@ public class ServicioCarritoImpl implements ServicioCarrito {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ServicioCarritoImpl.class);
 
-	private static final String PLANTILLA_PRODUCTO_NO_EXISTE = "El producto {%s} no está registrado en el sistema";
-	private static final String PLANTILLA_CANTIDAD_SUPERA_INVENTARIO = "Intentando adicionar más unidades {%s} de las disponibles en el inventario {%s} para el producto {%s}";
-	private static final String PLANTILLA_CARRITO_NO_EXISTE = "No existe el carrito de compras del usuario {%s}";
-	private static final String PLANTILLA_PRODUCTO_NO_EN_CARRITO = "No se encontró el producto {%s} en el carrito del usuario {%s}";
+	private static final String PLANTILLA_PRODUCTO_NO_EXISTE = "El producto %s no está registrado en el sistema";
+	private static final String PLANTILLA_CANTIDAD_SUPERA_INVENTARIO = "Intentando adicionar %s unidad(es) cuando en el inventario hay %s, para el producto %s";
+	private static final String PLANTILLA_CARRITO_NO_EXISTE = "No existe el carrito de compras del usuario %s";
+	private static final String PLANTILLA_PRODUCTO_NO_EN_CARRITO = "No se encontró el producto %s en el carrito del usuario %s";
 	private static final String PLANTILLA_LOGGER_ERROR_ADICIONANDO = "Error adicionando producto al carrito de '{}'. Error: {}";
 	private static final String PLANTILLA_LOGGER_ERROR_ACTUALIZANDO = "Error actualizando productos del carrito de '{}'. Error: {}";
 

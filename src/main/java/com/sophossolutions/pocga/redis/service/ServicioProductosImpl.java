@@ -82,7 +82,7 @@ public class ServicioProductosImpl implements ServicioProductos {
 			bcp.setCantidad(cantidadEnMapa);
 			final BeanDetallesProducto detallesProducto = getProducto(productoEnMapa);
 			if(detallesProducto == null) {
-				throw new ErrorEntidadNoEncontrada(String.format("El producto {%s} no está registrado en el sistema", productoEnMapa));
+				throw new ErrorEntidadNoEncontrada(String.format("El producto %s no está registrado en el sistema", productoEnMapa));
 			}
 			bcp.setProducto(detallesProducto);
 			listaProductos.add(bcp);
@@ -107,17 +107,19 @@ public class ServicioProductosImpl implements ServicioProductos {
 				BeanDetallesProducto.class
 			);
 		if (!response.getStatusCode().is2xxSuccessful()) {
+			LOGGER.error("Error consultando el producto {} en la API. Error: {}", idProducto, response.getStatusCode());
 			return null;
 		}
 		LOGGER.info("Respuesta de API remota para idProducto {}: {}", idProducto, response);
 
 		// Control
-		if (response.getBody() == null || response.getBody().getIdProducto() == 0) {
+		final BeanDetallesProducto producto = response.getBody();
+		if (producto == null || producto.getIdProducto() == 0) {
 			return null;
 		}
 
 		// Entrega el producto
-		return response.getBody();
+		return producto;
 	}
 
 }

@@ -3,10 +3,14 @@ package com.sophossolutions.pocga.utils;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
@@ -64,13 +68,16 @@ public class AES {
 	}
 
 	/**
-	 * Procedimiento que cifra el texto indicado. Para descifrarlo se debe
+	 * Procedimiento que cifra el texto indicado.Para descifrarlo se debe 
 	 * utilizar la misma llave y el mismo algoritmo.
 	 * @param textoNormal
 	 * @return
-	 * @throws Exception
+	 * @throws javax.crypto.BadPaddingException
+	 * @throws javax.crypto.IllegalBlockSizeException
+	 * @throws java.security.InvalidAlgorithmParameterException
+	 * @throws java.security.InvalidKeyException
 	 */
-	public static synchronized String cifrar(String textoNormal) throws Exception {
+	public static synchronized String cifrar(String textoNormal) throws BadPaddingException, IllegalBlockSizeException, InvalidAlgorithmParameterException, InvalidKeyException {
 		// Vector de inicialización
 		final byte[] iv = new byte[IV_LENGTH_BYTE];
 		SECURE_RANDOM.nextBytes(iv);
@@ -90,13 +97,16 @@ public class AES {
 	}
 
 	/**
-	 * Procedimiento que descifra el texto indicado. Dicho texto debió ser
+	 * Procedimiento que descifra el texto indicado.Dicho texto debió ser 
 	 * cifrado por la misma llave y el mismo algoritmo.
 	 * @param textoCifrado
 	 * @return
-	 * @throws Exception
+	 * @throws javax.crypto.BadPaddingException
+	 * @throws javax.crypto.IllegalBlockSizeException
+	 * @throws java.security.InvalidAlgorithmParameterException
+	 * @throws java.security.InvalidKeyException
 	 */
-	public static synchronized String descifrar(String textoCifrado) throws Exception {
+	public static synchronized String descifrar(String textoCifrado) throws BadPaddingException, IllegalBlockSizeException, InvalidAlgorithmParameterException, InvalidKeyException {
 		// Obtiene el texto cifrado
 		final ByteBuffer byteBuffer = ByteBuffer.wrap(Base64.getDecoder().decode(textoCifrado));
 		

@@ -16,8 +16,11 @@ import com.sophossolutions.pocga.redis.entity.CarritoEntity;
 import com.sophossolutions.pocga.redis.entity.ProductoEntity;
 import com.sophossolutions.pocga.redis.service.ServicioProductos;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.UUID;
 import org.junit.Assert;
 import org.junit.Test;
@@ -129,6 +132,15 @@ public class TestOtros {
 		
 		// Compara
 		validar(b1, b2);
+		
+		// Ordena
+		b2.setIdPedido(UUIDs.timeBased());
+		final Set<BeanCrearPedido> setBeans = new TreeSet<>();
+		setBeans.add(b2);
+		setBeans.add(b1);
+		final List<BeanCrearPedido> ordenadosTree = new ArrayList<>(setBeans);
+		final List<BeanCrearPedido> ordenadosManual = List.of(b1, b2);
+		Assert.assertEquals("Orden incorecto de BeanCrearPedido", ordenadosManual, ordenadosTree);
 	}
 
 	@Test

@@ -13,6 +13,10 @@ import com.amazonaws.services.cognitoidp.model.InvalidParameterException;
 import com.sophossolutions.pocga.api.exceptions.ErrorEntidadNoEncontrada;
 import com.sophossolutions.pocga.beans.BeanUsuario;
 import com.sophossolutions.pocga.utils.AES;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,15 +48,12 @@ public class ServicioUsuarios {
 		try {
 			// Crea el bean
 			final BeanUsuario usuario = new BeanUsuario(idUsuario);
+			if(true) {
+				return usuario;
+			}
 
 			// Provee las credenciales
-			AWSCredentialsProvider credentialsProvider;
-			try {
-				final AWSCredentials credentials = new BasicAWSCredentials(AES.descifrar(awsAccessKey), AES.descifrar(awsSecretKey));
-				credentialsProvider = new AWSStaticCredentialsProvider(credentials);
-			} catch (Exception e) {
-				throw new InvalidParameterException("No fue posible descifrar los datos de acceso a AWS Cognito -> " + e.getLocalizedMessage());
-			}
+			final AWSCredentialsProvider credentialsProvider = getAWSCredentialsProvider();
 
 			// Crea el cliente
 			final AWSCognitoIdentityProvider cognitoClient = AWSCognitoIdentityProviderClientBuilder.standard()
@@ -91,6 +92,22 @@ public class ServicioUsuarios {
 			final ErrorEntidadNoEncontrada eene = new ErrorEntidadNoEncontrada(error);
 			eene.addSuppressed(e);
 			throw eene;
+		}
+	}
+	
+	/**
+	 * Procedimiento que entrega el proveedor de credenciales de AWS
+	 * @return 
+	 */
+	private AWSCredentialsProvider getAWSCredentialsProvider() {
+		try {
+			final AWSCredentials credentials = new BasicAWSCredentials(
+				AES.descifrar(awsAccessKey), 
+				AES.descifrar(awsSecretKey)
+			);
+			return new AWSStaticCredentialsProvider(credentials);
+		} catch (InvalidAlgorithmParameterException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
+			throw new InvalidParameterException("No fue posible descifrar los datos de acceso a AWS Cognito -> " + e.getLocalizedMessage());
 		}
 	}
 
