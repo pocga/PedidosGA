@@ -16,6 +16,12 @@ public class BeanDetallesCarrito {
 	public BeanDetallesCarrito() {
 	}
 
+	public BeanDetallesCarrito(BeanUsuario usuario, List<BeanCantidadProducto> productos, BeanTotales totales) {
+		this.usuario = usuario;
+		this.productos = productos;
+		this.totales = totales;
+	}
+
 	@Override public String toString() {
 		return "BeanDetallesCarrito{" + "idUsuario=" + usuario + ", productos=" + productos + ", totales=" + totales + '}';
 	}

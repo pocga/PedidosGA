@@ -42,7 +42,7 @@ public class BeanCrearPedido implements Comparable<BeanCrearPedido> {
 	}
 
 	@Override public String toString() {
-		return "BeanCrearPedidos{" + "idPedido=" + idPedido + ", idUsuario=" + idUsuario + ", productos=" + productos + ", nombreDestinatario=" + nombreDestinatario + ", direccionDestinatario=" + direccionDestinatario + ", ciudadDestinatario=" + ciudadDestinatario + ", telefonoDestinatario=" + telefonoDestinatario + ", fecha=" + fecha + '}';
+		return "BeanCrearPedido{" + "idPedido=" + idPedido + ", idUsuario=" + idUsuario + ", productos=" + productos + ", nombreDestinatario=" + nombreDestinatario + ", direccionDestinatario=" + direccionDestinatario + ", ciudadDestinatario=" + ciudadDestinatario + ", telefonoDestinatario=" + telefonoDestinatario + ", fecha=" + fecha + ", servicioProductos=" + servicioProductos + '}';
 	}
 
 	@Override public int hashCode() {
@@ -131,19 +131,6 @@ public class BeanCrearPedido implements Comparable<BeanCrearPedido> {
 
 	@Override public int compareTo(BeanCrearPedido o) {
 		return this.idPedido.compareTo(o.getIdPedido());
-	}
-
-	public BeanPedido toBeanPedido() {
-		final BeanPedido pedido = new BeanPedido();
-		pedido.setIdPedido(idPedido);
-		pedido.setUsuario(new BeanUsuario(idUsuario));
-		pedido.setProductos(servicioProductos.fromMapProductos(BeanProducto.toMap(productos)));
-		pedido.setNombreDestinatario(nombreDestinatario);
-		pedido.setDireccionDestinatario(direccionDestinatario);
-		pedido.setCiudadDestinatario(ciudadDestinatario);
-		pedido.setTelefonoDestinatario(telefonoDestinatario);
-		pedido.setFecha(fecha);
-		return pedido;
 	}
 
 }

@@ -24,6 +24,13 @@ public class BeanUsuario implements Serializable {
 		this.apellidos = idUsuario;
 	}
 
+	public BeanUsuario(String idUsuario, String email, String nombres, String apellidos) {
+		this.idUsuario = idUsuario;
+		this.email = email;
+		this.nombres = nombres;
+		this.apellidos = apellidos;
+	}
+
 	@Override
 	public String toString() {
 		return "BeanUsuario{" + "idUsuario=" + idUsuario + ", email=" + email + ", nombres=" + nombres + ", apellidos=" + apellidos + '}';

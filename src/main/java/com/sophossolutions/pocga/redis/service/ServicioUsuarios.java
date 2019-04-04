@@ -82,6 +82,7 @@ public class ServicioUsuarios {
 			});
 
 			// Entrega el correo
+			LOGGER.info("Consulta de usuario '{}' en AWS Cognito exitosa", idUsuario);
 			return usuario;
 
 		} catch (RuntimeException e) {
