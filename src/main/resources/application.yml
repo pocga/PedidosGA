@@ -5,8 +5,8 @@ spring.cache.redis.time-to-live: 60000
 pedidosga:
     aws:
         cognitoGroupId: us-east-1_CVePKGhTu
-        accessKey: yAVSrZiMimn8pFSFAlli_lje1qxSnmL_aoxCfSuMhkQ
-        secretKey: 9pITKY-ng4PEaEX7GtUqcdk6L8sIIKMSmtzKt3haSU3hbPgIt-xz4TrMGHR8n5zu
+        accessKey: DDSCD4ufOznrUq6IvzQ/lis8b4pibmuTI7AAVLGhWxwtuoD9vw2/hl2AwL7n71yWPA==
+        secretKey: DMnEOMCiztJ79DLqJZWOcZp4au3hjrDx9nVzNX4wMnYrR3/kLRtyxVbTg2QBVnrrCIUKuAtFO932W6ilVNqzJRl872kA
 
 ---
 
