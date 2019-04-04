@@ -251,7 +251,12 @@ public class ServicioCarritoImpl implements ServicioCarrito {
 
 		// Retorna los totales
 		LOGGER.info("Eliminación del producto '{}' del carrito del usuario '{}' exitosa", idProducto, idUsuario);
-		return getTotalesCarrito(idUsuario);
+		if(repository.existsById(idUsuario)) {
+			return getTotalesCarrito(idUsuario);
+		} else {
+			LOGGER.info("Carrito del usuario '{}' quedó vacío luego de eliminar el producto '{}'", idUsuario, idProducto);
+			return new BeanTotales(0, 0);
+		}
 	}
 
 	@Override public BeanTotales eliminarCarrito(String idUsuario) {
@@ -266,7 +271,7 @@ public class ServicioCarritoImpl implements ServicioCarrito {
 		final CarritoEntity entity = new CarritoEntity(idUsuario, null);
 		repository.delete(entity);
 		LOGGER.info("Eliminación del carrito del usuario '{}' exitosa", idUsuario);
-		return getTotalesCarrito(idUsuario);
+		return new BeanTotales(0, 0);
 	}
 
 }

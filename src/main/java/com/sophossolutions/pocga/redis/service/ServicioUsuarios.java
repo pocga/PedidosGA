@@ -48,9 +48,6 @@ public class ServicioUsuarios {
 		try {
 			// Crea el bean
 			final BeanUsuario usuario = new BeanUsuario(idUsuario);
-			if(true) {
-				return usuario;
-			}
 
 			// Provee las credenciales
 			final AWSCredentialsProvider credentialsProvider = getAWSCredentialsProvider();
@@ -107,7 +104,7 @@ public class ServicioUsuarios {
 			);
 			return new AWSStaticCredentialsProvider(credentials);
 		} catch (InvalidAlgorithmParameterException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
-			throw new InvalidParameterException("No fue posible descifrar los datos de acceso a AWS Cognito -> " + e.getLocalizedMessage());
+			throw new InvalidParameterException("No fue posible descifrar los datos de acceso a AWS Cognito -> " + e.getClass().getSimpleName() + ": " + e.getLocalizedMessage());
 		}
 	}
 
