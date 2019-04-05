@@ -48,6 +48,9 @@ public class ServicioUsuarios {
 		try {
 			// Crea el bean
 			final BeanUsuario usuario = new BeanUsuario(idUsuario);
+			if(true) {
+				return usuario;
+			}
 
 			// Provee las credenciales
 			final AWSCredentialsProvider credentialsProvider = getAWSCredentialsProvider();
