@@ -148,7 +148,7 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 				throw new ErrorEntidadNoEncontrada(error);
 			}
 			if (bcp.getCantidad() > bdp.getCantidadDisponible()) {
-				final String error = "Intentando crear un pedido por " + bcp.getCantidad() + " unidad(es) cuando en en el inventario hay " + bdp.getCantidadDisponible() + ", para el producto " + bcp.getIdProducto() + "";
+				final String error = "Producto agostado";
 				LOGGER.error(PLANTILLA_LOGGER_ERROR_ADICIONANDO, pedido.getIdPedido(), error);
 				throw new ErrorCreandoEntidad(error);
 			}
