@@ -215,6 +215,9 @@ public class TestOtros {
 		// Fecha
 		final LocalDateTime fecha = LocalDateTime.now();
 		
+		// Totales
+		final BeanTotales totales = new BeanTotales(5, 1000);
+		
 		// Bean 1
 		final BeanPedido b1 = new BeanPedido();
 		b1.setIdPedido(ID_PEDIDO);
@@ -225,6 +228,7 @@ public class TestOtros {
 		b1.setCiudadDestinatario("Ciudad");
 		b1.setTelefonoDestinatario("Teléfono");
 		b1.setFecha(fecha);
+		b1.setTotales(totales);
 
 		// Bean 2
 		final BeanPedido b2 = new BeanPedido(
@@ -235,7 +239,8 @@ public class TestOtros {
 			"Dirección",
 			"Ciudad",
 			"Teléfono", 
-			fecha
+			fecha, 
+			totales
 		);
 
 		// Compara

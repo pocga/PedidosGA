@@ -5,15 +5,19 @@ import com.datastax.driver.core.utils.UUIDs;
 import com.sophossolutions.pocga.api.exceptions.ErrorCreandoEntidad;
 import com.sophossolutions.pocga.api.exceptions.ErrorEntidadNoEncontrada;
 import com.sophossolutions.pocga.api.exceptions.ErrorListadoEntidadesVacio;
+import com.sophossolutions.pocga.beans.BeanCantidadProducto;
 import com.sophossolutions.pocga.beans.BeanCrearPedido;
 import com.sophossolutions.pocga.beans.BeanDetallesProducto;
 import com.sophossolutions.pocga.beans.BeanPedido;
 import com.sophossolutions.pocga.beans.BeanProducto;
+import com.sophossolutions.pocga.beans.BeanTotales;
 import com.sophossolutions.pocga.cassandra.entity.PedidosEntity;
 import com.sophossolutions.pocga.cassandra.repository.PedidosRepository;
 import com.sophossolutions.pocga.redis.service.ServicioProductos;
 import com.sophossolutions.pocga.redis.service.ServicioUsuarios;
 import com.sophossolutions.pocga.utils.AES;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +26,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -167,7 +173,7 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 			entity.setCiudadDestinatario(AES.cifrar(pedido.getCiudadDestinatario()));
 			entity.setTelefonoDestinatario(AES.cifrar(pedido.getTelefonoDestinatario()));
 			entity.setFecha(pedido.getFecha() != null ? pedido.getFecha() : LocalDateTime.now());
-		} catch (Exception e) {
+		} catch (InvalidAlgorithmParameterException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
 			final String error = "No se pudo cifrar la información de envío del pedido";
 			LOGGER.error("Error creando el pedido con ID '{}'. Error: {}", pedido.getIdPedido(), error);
 			final ErrorCreandoEntidad eene = new ErrorCreandoEntidad(error);
@@ -212,6 +218,28 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 		}
 	}
 
+	/**
+	 * Procedimiento que calcula los totales del pedido
+	 * @param pedido
+	 * @return 
+	 */
+	private BeanTotales calcularTotalesPedidos(BeanPedido pedido) {
+		// Calcula los totales
+		final int cantidad = pedido.getProductos()
+			.stream()
+			.mapToInt(BeanCantidadProducto::getCantidad)
+			.sum()
+		;
+		final int precio = pedido.getProductos()
+			.stream()
+			.mapToInt(bcp -> bcp.getCantidad() * bcp.getProducto().getPrecio())
+			.sum()
+		;
+		
+		// Entrega los totales
+		return new BeanTotales(cantidad, precio);
+	}
+
 	@Override public BeanPedido fromEntity(PedidosEntity entity)  {
 		// Crea el objeto
 		final BeanPedido pedido = new BeanPedido();
@@ -245,6 +273,9 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 			eene.addSuppressed(e);
 			throw eene;
 		}
+		
+		// Calcula los totales
+		pedido.setTotales(calcularTotalesPedidos(pedido));
 
 		// Entrega la instancia
 		return pedido;

@@ -1,10 +1,12 @@
 package com.sophossolutions.pocga.beans;
 
+import java.io.Serializable;
+
 /**
  * Bean para los totales del carrito
  * @author Ricardo José Ramírez Blauvelt
  */
-public class BeanTotales {
+public class BeanTotales implements Serializable {
 
 	private int totalCantidad;
 	private int totalPrecio;

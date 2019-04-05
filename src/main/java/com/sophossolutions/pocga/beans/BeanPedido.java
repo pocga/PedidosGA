@@ -22,11 +22,12 @@ public class BeanPedido implements Comparable<BeanPedido>, Serializable {
 	private String telefonoDestinatario;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
 	private LocalDateTime fecha;
+	private BeanTotales totales;
 
 	public BeanPedido() {
 	}
 
-	public BeanPedido(UUID idPedido, BeanUsuario usuario, List<BeanCantidadProducto> productos, String nombreDestinatario, String direccionDestinatario, String ciudadDestinatario, String telefonoDestinatario, LocalDateTime fecha) {
+	public BeanPedido(UUID idPedido, BeanUsuario usuario, List<BeanCantidadProducto> productos, String nombreDestinatario, String direccionDestinatario, String ciudadDestinatario, String telefonoDestinatario, LocalDateTime fecha, BeanTotales totales) {
 		this.idPedido = idPedido;
 		this.usuario = usuario;
 		this.productos = productos;
@@ -35,10 +36,11 @@ public class BeanPedido implements Comparable<BeanPedido>, Serializable {
 		this.ciudadDestinatario = ciudadDestinatario;
 		this.telefonoDestinatario = telefonoDestinatario;
 		this.fecha = fecha;
+		this.totales = totales;
 	}
 
 	@Override public String toString() {
-		return "BeanPedido{" + "idPedido=" + idPedido + ", usuario=" + usuario + ", productos=" + productos + ", nombreDestinatario=" + nombreDestinatario + ", direccionDestinatario=" + direccionDestinatario + ", ciudadDestinatario=" + ciudadDestinatario + ", telefonoDestinatario=" + telefonoDestinatario + ", fecha=" + fecha + '}';
+		return "BeanPedido{" + "idPedido=" + idPedido + ", usuario=" + usuario + ", productos=" + productos + ", nombreDestinatario=" + nombreDestinatario + ", direccionDestinatario=" + direccionDestinatario + ", ciudadDestinatario=" + ciudadDestinatario + ", telefonoDestinatario=" + telefonoDestinatario + ", fecha=" + fecha + ", totales=" + totales + '}';
 	}
 
 	@Override public int hashCode() {
@@ -123,6 +125,14 @@ public class BeanPedido implements Comparable<BeanPedido>, Serializable {
 
 	public void setFecha(LocalDateTime fecha) {
 		this.fecha = fecha;
+	}
+
+	public BeanTotales getTotales() {
+		return totales;
+	}
+
+	public void setTotales(BeanTotales totales) {
+		this.totales = totales;
 	}
 
 	@Override public int compareTo(BeanPedido o) {
