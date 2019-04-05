@@ -1,4 +1,4 @@
-package com.sophossolutions.pocga.api.exceptions;
+package com.sophossolutions.pocga.exceptions;
 
 import com.sophossolutions.pocga.beans.BeanApiError;
 import org.springframework.core.Ordered;

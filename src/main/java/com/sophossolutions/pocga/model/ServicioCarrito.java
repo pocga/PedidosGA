@@ -1,4 +1,4 @@
-package com.sophossolutions.pocga.redis.service;
+package com.sophossolutions.pocga.model;
 
 import com.sophossolutions.pocga.beans.BeanDetallesCarrito;
 import com.sophossolutions.pocga.beans.BeanProducto;

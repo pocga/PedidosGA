@@ -1,4 +1,4 @@
-package com.sophossolutions.pocga.redis.service;
+package com.sophossolutions.pocga.service;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
@@ -10,8 +10,9 @@ import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProviderClientBuilder
 import com.amazonaws.services.cognitoidp.model.AdminGetUserRequest;
 import com.amazonaws.services.cognitoidp.model.AdminGetUserResult;
 import com.amazonaws.services.cognitoidp.model.InvalidParameterException;
-import com.sophossolutions.pocga.api.exceptions.ErrorEntidadNoEncontrada;
+import com.sophossolutions.pocga.exceptions.ErrorEntidadNoEncontrada;
 import com.sophossolutions.pocga.beans.BeanUsuario;
+import com.sophossolutions.pocga.model.ServicioUsuarios;
 import com.sophossolutions.pocga.utils.AES;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -28,10 +29,10 @@ import org.springframework.stereotype.Service;
  * @author Ricardo José Ramírez Blauvelt
  */
 @Service
-public class ServicioUsuarios {
+public class ServicioUsuariosImpl implements ServicioUsuarios {
 
 	/** Logger */
-	private static final Logger LOGGER = LoggerFactory.getLogger(ServicioUsuarios.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ServicioUsuariosImpl.class);
 	
 	@Value("${pedidosga.aws.cognitoGroupId}")
 	private String awsCognitoGroupId;
@@ -44,7 +45,7 @@ public class ServicioUsuarios {
 	
 	
 	@Cacheable(cacheNames = "usuarios", key = "#idUsuario")
-	public BeanUsuario getUserByIdUsuario(String idUsuario) {
+	@Override public BeanUsuario getUserByIdUsuario(String idUsuario) {
 		try {
 			// Crea el bean
 			final BeanUsuario usuario = new BeanUsuario(idUsuario);

@@ -1,4 +1,4 @@
-package com.sophossolutions.pocga.redis.entity;
+package com.sophossolutions.pocga.entity;
 
 import java.util.Map;
 import java.util.Objects;

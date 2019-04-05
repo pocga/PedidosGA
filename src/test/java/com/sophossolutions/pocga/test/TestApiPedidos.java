@@ -7,7 +7,7 @@ import com.sophossolutions.pocga.beans.BeanPedido;
 import com.sophossolutions.pocga.beans.BeanProducto;
 import com.sophossolutions.pocga.beans.BeanTotales;
 import com.sophossolutions.pocga.beans.BeanUsuario;
-import com.sophossolutions.pocga.redis.service.ServicioProductos;
+import com.sophossolutions.pocga.model.ServicioProductos;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;

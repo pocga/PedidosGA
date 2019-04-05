@@ -1,7 +1,7 @@
 package com.sophossolutions.pocga.beans;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.sophossolutions.pocga.redis.service.ServicioProductos;
+import com.sophossolutions.pocga.model.ServicioProductos;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;

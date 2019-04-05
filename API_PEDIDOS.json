@@ -791,6 +791,9 @@
                 "telefonoDestinatario": {
                     "type": "string"
                 },
+                "totales": {
+                    "$ref": "#/definitions/BeanTotales"
+                },
                 "usuario": {
                     "$ref": "#/definitions/BeanUsuario"
                 }
@@ -828,13 +831,16 @@
         "BeanUsuario": {
             "type": "object",
             "properties": {
+                "apellidos": {
+                    "type": "string"
+                },
                 "email": {
                     "type": "string"
                 },
                 "idUsuario": {
                     "type": "string"
                 },
-                "name": {
+                "nombres": {
                     "type": "string"
                 }
             },

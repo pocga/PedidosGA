@@ -1,16 +1,16 @@
-package com.sophossolutions.pocga.api.exceptions;
+package com.sophossolutions.pocga.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
- * Excepción para un listado de entidades vacío
+ * Excepción para una entidad no encontrada
  * @author Ricardo José Ramírez Blauvelt
  */
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class ErrorListadoEntidadesVacio extends RuntimeException {
+public class ErrorEntidadNoEncontrada extends RuntimeException {
 	
-	public ErrorListadoEntidadesVacio(String mensaje) {
+	public ErrorEntidadNoEncontrada(String mensaje) {
 		super(mensaje);
 	}
 

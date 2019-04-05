@@ -1,4 +1,4 @@
-package com.sophossolutions.pocga.redis.entity;
+package com.sophossolutions.pocga.entity;
 
 import java.io.Serializable;
 import java.util.Objects;

@@ -1,9 +1,9 @@
 package com.sophossolutions.pocga.api;
 
-import com.sophossolutions.pocga.api.exceptions.ErrorEntidadNoEncontrada;
+import com.sophossolutions.pocga.exceptions.ErrorEntidadNoEncontrada;
 import com.sophossolutions.pocga.beans.BeanCrearPedido;
 import com.sophossolutions.pocga.beans.BeanPedido;
-import com.sophossolutions.pocga.cassandra.service.ServicioPedidos;
+import com.sophossolutions.pocga.model.ServicioPedidos;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;

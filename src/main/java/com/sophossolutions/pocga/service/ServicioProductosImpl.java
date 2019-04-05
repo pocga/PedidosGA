@@ -1,11 +1,12 @@
-package com.sophossolutions.pocga.redis.service;
+package com.sophossolutions.pocga.service;
 
-import com.sophossolutions.pocga.api.exceptions.ErrorEntidadNoEncontrada;
+import com.sophossolutions.pocga.exceptions.ErrorEntidadNoEncontrada;
 import com.sophossolutions.pocga.beans.BeanCantidadProducto;
 import com.sophossolutions.pocga.beans.BeanDetallesProducto;
 import com.sophossolutions.pocga.beans.BeanProducto;
-import com.sophossolutions.pocga.redis.entity.ProductoEntity;
-import com.sophossolutions.pocga.redis.repository.ProductosRepository;
+import com.sophossolutions.pocga.entity.ProductoEntity;
+import com.sophossolutions.pocga.model.ServicioProductos;
+import com.sophossolutions.pocga.repository.ProductosRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

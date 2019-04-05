@@ -1,6 +1,6 @@
-package com.sophossolutions.pocga.cassandra.repository;
+package com.sophossolutions.pocga.repository;
 
-import com.sophossolutions.pocga.cassandra.entity.PedidosEntity;
+import com.sophossolutions.pocga.entity.PedidosEntity;
 import java.util.UUID;
 import org.springframework.data.repository.CrudRepository;
 

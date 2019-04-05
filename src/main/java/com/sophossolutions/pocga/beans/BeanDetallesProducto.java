@@ -1,6 +1,6 @@
 package com.sophossolutions.pocga.beans;
 
-import com.sophossolutions.pocga.redis.entity.ProductoEntity;
+import com.sophossolutions.pocga.entity.ProductoEntity;
 import java.io.Serializable;
 
 /**

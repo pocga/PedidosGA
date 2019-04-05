@@ -1,16 +1,19 @@
-package com.sophossolutions.pocga.redis.service;
+package com.sophossolutions.pocga.service;
 
-import com.sophossolutions.pocga.api.exceptions.ErrorActualizandoEntidad;
-import com.sophossolutions.pocga.api.exceptions.ErrorCreandoEntidad;
-import com.sophossolutions.pocga.api.exceptions.ErrorEntidadNoEncontrada;
-import com.sophossolutions.pocga.api.exceptions.ErrorListadoEntidadesVacio;
+import com.sophossolutions.pocga.exceptions.ErrorActualizandoEntidad;
+import com.sophossolutions.pocga.exceptions.ErrorCreandoEntidad;
+import com.sophossolutions.pocga.exceptions.ErrorEntidadNoEncontrada;
+import com.sophossolutions.pocga.exceptions.ErrorListadoEntidadesVacio;
 import com.sophossolutions.pocga.beans.BeanCantidadProducto;
 import com.sophossolutions.pocga.beans.BeanDetallesCarrito;
 import com.sophossolutions.pocga.beans.BeanDetallesProducto;
 import com.sophossolutions.pocga.beans.BeanProducto;
 import com.sophossolutions.pocga.beans.BeanTotales;
-import com.sophossolutions.pocga.redis.entity.CarritoEntity;
-import com.sophossolutions.pocga.redis.repository.CarritoRepository;
+import com.sophossolutions.pocga.entity.CarritoEntity;
+import com.sophossolutions.pocga.model.ServicioCarrito;
+import com.sophossolutions.pocga.model.ServicioProductos;
+import com.sophossolutions.pocga.model.ServicioUsuarios;
+import com.sophossolutions.pocga.repository.CarritoRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

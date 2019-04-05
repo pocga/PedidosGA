@@ -1,6 +1,6 @@
-package com.sophossolutions.pocga.redis.repository;
+package com.sophossolutions.pocga.repository;
 
-import com.sophossolutions.pocga.redis.entity.ProductoEntity;
+import com.sophossolutions.pocga.entity.ProductoEntity;
 import org.springframework.data.repository.CrudRepository;
 
 /**

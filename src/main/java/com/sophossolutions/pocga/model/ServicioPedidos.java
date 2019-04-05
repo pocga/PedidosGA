@@ -1,8 +1,8 @@
-package com.sophossolutions.pocga.cassandra.service;
+package com.sophossolutions.pocga.model;
 
 import com.sophossolutions.pocga.beans.BeanCrearPedido;
 import com.sophossolutions.pocga.beans.BeanPedido;
-import com.sophossolutions.pocga.cassandra.entity.PedidosEntity;
+import com.sophossolutions.pocga.entity.PedidosEntity;
 import java.util.List;
 import java.util.UUID;
 

@@ -1,4 +1,4 @@
-package com.sophossolutions.pocga.cassandra.entity;
+package com.sophossolutions.pocga.entity;
 
 import java.time.LocalDateTime;
 import java.util.Map;

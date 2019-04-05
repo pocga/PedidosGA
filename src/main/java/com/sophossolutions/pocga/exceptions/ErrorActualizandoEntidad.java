@@ -1,4 +1,4 @@
-package com.sophossolutions.pocga.api.exceptions;
+package com.sophossolutions.pocga.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
