@@ -1,4 +1,4 @@
-package com.sophossolutions.pocga.config;
+package com.sophossolutions.pocga.api;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
