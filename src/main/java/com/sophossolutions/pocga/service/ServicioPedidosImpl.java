@@ -160,6 +160,9 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 				throw new ErrorCreandoEntidad(error);
 			}
 		});
+		
+		// Valida el usuario
+		servicioUsuarios.getUserByIdUsuario(pedido.getIdUsuario());
 
 		// Crea la entidad
 		final PedidosEntity entity = new PedidosEntity();
