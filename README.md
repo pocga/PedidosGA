@@ -2,7 +2,7 @@
 
 Proyecto en Spring Boot (Java 11), con Gradle y pruebas unitarias jUnit, para la PoC GA. Expone la API para los servicios de "Carrito" y "Pedidos"
 
-[![Build Status](http://18.204.157.43/jenkins/job/PedidosGA)](http://18.204.157.43/jenkins/job/PedidosGA/badge/icon?style=plastic)
+[![Build Status](http://18.204.157.43/jenkins/buildStatus/icon?job=PedidosGA&style=plastic)](http://18.204.157.43/jenkins/job/PedidosGA/)
 
 ## Dependencias
 
