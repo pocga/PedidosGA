@@ -11,8 +11,10 @@ import com.sophossolutions.pocga.beans.BeanDetallesProducto;
 import com.sophossolutions.pocga.beans.BeanPedido;
 import com.sophossolutions.pocga.beans.BeanProducto;
 import com.sophossolutions.pocga.beans.BeanTotales;
+import com.sophossolutions.pocga.beans.BeanUsuario;
 import com.sophossolutions.pocga.model.ServicioPedidos;
 import com.sophossolutions.pocga.entity.PedidosEntity;
+import com.sophossolutions.pocga.model.ServicioCorreo;
 import com.sophossolutions.pocga.repository.PedidosRepository;
 import com.sophossolutions.pocga.model.ServicioProductos;
 import com.sophossolutions.pocga.model.ServicioUsuarios;
@@ -60,6 +62,9 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 	
 	@Autowired
 	private ServicioUsuarios servicioUsuarios;
+	
+	@Autowired
+	private ServicioCorreo servicioCorreo;
 	
 	@Override public List<BeanPedido> getPedidos() {
 		// Consulta todos los pedidos
@@ -162,7 +167,7 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 		});
 		
 		// Valida el usuario
-		servicioUsuarios.getUserByIdUsuario(pedido.getIdUsuario());
+		final BeanUsuario usuario = servicioUsuarios.getUserByIdUsuario(pedido.getIdUsuario());
 
 		// Crea la entidad
 		final PedidosEntity entity = new PedidosEntity();
@@ -195,6 +200,9 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 			LOGGER.warn("Error eliminando el carrito del usuario '{}'. Error: {}", pedido.getIdUsuario(), re.getLocalizedMessage());
 		}
 		
+		// Envía el correo
+		servicioCorreo.enviarConfirmacionPedido(newEntity.getIdPedido(), usuario);
+		
 		// Entrega el ID generado
 		LOGGER.info("Creación del pedido '{}' exitosa", newEntity.getIdPedido());
 		return fromEntity(newEntity);
@@ -202,7 +210,9 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 
 	@Override public void eliminarPedido(UUID idPedido) {
 		if(repository.existsById(idPedido)) {
+			final BeanPedido pedido = getPedido(idPedido);
 			repository.deleteById(idPedido);
+			servicioCorreo.enviarCancelacionPedido(idPedido, pedido.getUsuario());
 			LOGGER.info("Eliminación del pedido '{}' exitosa", idPedido);
 		} else {
 			final String error = String.format(PLANTILLA_PEDIDO_NO_EXISTE, idPedido);
@@ -270,7 +280,7 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 			pedido.setDireccionDestinatario(AES.descifrar(entity.getDireccionDestinatario()));
 			pedido.setCiudadDestinatario(AES.descifrar(entity.getCiudadDestinatario()));
 			pedido.setTelefonoDestinatario(AES.descifrar(entity.getTelefonoDestinatario()));
-		} catch (Exception e) {
+		} catch (InvalidAlgorithmParameterException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
 			final String error = "No se pudo descifrar la información de envío del pedido";
 			LOGGER.error("Error generando el pedido a partir de la entidad para el ID '{}'. Error: {}", entity.getIdPedido(), error);
 			final ErrorEntidadNoEncontrada eene = new ErrorEntidadNoEncontrada(error);

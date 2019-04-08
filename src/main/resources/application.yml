@@ -1,6 +1,23 @@
 spring.profiles.active: dev
-spring.cache.type: redis
-spring.cache.redis.time-to-live: 60000
+
+spring:
+    cache:
+        type: redis
+        redis.time-to-live: 60000
+    mail:
+        host: email-smtp.us-east-1.amazonaws.com
+        username: AKIAVBIF7XV745L7NEI4
+        password: BGuoNrOhgWga7HsdEeMTFVlGDlLMH0mLDP7d/VkYUcVR
+        properties:
+            mail:
+                transport.protocol: smtp
+                smtp:
+                    port: 587
+                    auth: true
+                    starttls:
+                        enable: true
+                        required: true
+
 
 pedidosga:
     aws:

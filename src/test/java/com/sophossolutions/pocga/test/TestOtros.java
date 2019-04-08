@@ -119,16 +119,17 @@ public class TestOtros {
 		b1.setFecha(fecha);
 		
 		// Bean 2
-		final BeanCrearPedido b2 = new BeanCrearPedido(
-			ID_PEDIDO, 
-			ID_USUARIO, 
-			List.of(producto), 
-			"NombreDestinatario", 
-			"DireccionDestinatario", 
-			"CiudadDestinatario", 
-			"TelefonoDestinatario", 
-			fecha
-		);
+		final BeanCrearPedido b2 = new BeanCrearPedido.BeanCrearPedidoBuilder()
+			.addIdPedido(ID_PEDIDO)
+			.addIdUsuario(ID_USUARIO)
+			.addProductos(List.of(producto))
+			.addNombreDestinatario("NombreDestinatario")
+			.addDireccionDestinatario("DireccionDestinatario")
+			.addCiudadDestinatario("CiudadDestinatario")
+			.addTelefonoDestinatario("TelefonoDestinatario")
+			.addFecha(fecha)
+			.build()
+		;
 		
 		// Compara
 		validar(b1, b2);
@@ -231,17 +232,18 @@ public class TestOtros {
 		b1.setTotales(totales);
 
 		// Bean 2
-		final BeanPedido b2 = new BeanPedido(
-			ID_PEDIDO,
-			usuario,
-			List.of(cantidadProducto),
-			"Nombre",
-			"Dirección",
-			"Ciudad",
-			"Teléfono", 
-			fecha, 
-			totales
-		);
+		final BeanPedido b2 = new BeanPedido.BeanPedidoBuilder()
+			.addIdPedido(ID_PEDIDO)
+			.addUsuario(usuario)
+			.addProductos(List.of(cantidadProducto))
+			.addNombreDestinatario("Nombre")
+			.addDireccionDestinatario("Dirección")
+			.addCiudadDestinatario("Ciudad")
+			.addTelefonoDestinatario("Teléfono")
+			.addFecha(fecha)
+			.addTotales(totales)
+			.build()
+		;
 
 		// Compara
 		validar(b1, b2);

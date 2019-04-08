@@ -183,25 +183,57 @@ public class TestApiPedidos {
 		Assert.assertEquals("Error creando pedido con producto inexistente", HttpStatus.NOT_FOUND.value(), error5.getStatusCodeValue());
 
 		// Intenta crear pedido con cantidades por fuera del inventario
-		final BeanCrearPedido pedido3 = new BeanCrearPedido(null, ID_USUARIO_EX, List.of(new BeanProducto(2, Integer.MAX_VALUE)), "A", "B", "C", "D", null);
+		final BeanCrearPedido pedido3 = new BeanCrearPedido.BeanCrearPedidoBuilder()
+			.addIdUsuario(ID_USUARIO_EX)
+			.addProductos(List.of(new BeanProducto(2, Integer.MAX_VALUE)))
+			.addNombreDestinatario("A")
+			.addDireccionDestinatario("B")
+			.addCiudadDestinatario("C")
+			.addTelefonoDestinatario("D")
+			.build()
+		;
 		final ResponseEntity<BeanApiError> error6 = testRestTemplate.postForEntity(MODULO, pedido3, BeanApiError.class);
 		System.out.println(error6);
 		Assert.assertEquals("Error creando pedido por más unidades de las disponibles en el inventario", HttpStatus.UNPROCESSABLE_ENTITY.value(), error6.getStatusCodeValue());
 
 		// Intenta crear pedido con un usuario inexistente
-		final BeanCrearPedido pedido4 = new BeanCrearPedido(null, UUID.randomUUID().toString(), List.of(new BeanProducto(2, 1)), "A", "B", "C", "D", null);
+		final BeanCrearPedido pedido4 = new BeanCrearPedido.BeanCrearPedidoBuilder()
+			.addIdUsuario(UUID.randomUUID().toString())
+			.addProductos(List.of(new BeanProducto(2, 1)))
+			.addNombreDestinatario("A")
+			.addDireccionDestinatario("B")
+			.addCiudadDestinatario("C")
+			.addTelefonoDestinatario("D")
+			.build()
+		;
 		final ResponseEntity<BeanApiError> error7 = testRestTemplate.postForEntity(MODULO, pedido4, BeanApiError.class);
 		System.out.println(error7);
 		Assert.assertEquals("Error creando pedido con un usuario inexistente", HttpStatus.NOT_FOUND.value(), error7.getStatusCodeValue());
 
 		// Intenta crear pedido sin usuario
-		final BeanCrearPedido pedido5 = new BeanCrearPedido(null, "", List.of(new BeanProducto(2, 1)), "A", "B", "C", "D", null);
+		final BeanCrearPedido pedido5 = new BeanCrearPedido.BeanCrearPedidoBuilder()
+			.addIdUsuario("")
+			.addProductos(List.of(new BeanProducto(2, 1)))
+			.addNombreDestinatario("A")
+			.addDireccionDestinatario("B")
+			.addCiudadDestinatario("C")
+			.addTelefonoDestinatario("D")
+			.build()
+		;
 		final ResponseEntity<BeanApiError> error8 = testRestTemplate.postForEntity(MODULO, pedido5, BeanApiError.class);
 		System.out.println(error8);
 		Assert.assertEquals("Error creando pedido sin especificar el usuario", HttpStatus.UNPROCESSABLE_ENTITY.value(), error8.getStatusCodeValue());
 
 		// Intenta crear pedido sin productos
-		final BeanCrearPedido pedido6 = new BeanCrearPedido(null, ID_USUARIO_EX, List.of(), "A", "B", "C", "D", null);
+		final BeanCrearPedido pedido6 = new BeanCrearPedido.BeanCrearPedidoBuilder()
+			.addIdUsuario(ID_USUARIO_EX)
+			.addProductos(List.of())
+			.addNombreDestinatario("A")
+			.addDireccionDestinatario("B")
+			.addCiudadDestinatario("C")
+			.addTelefonoDestinatario("D")
+			.build()
+		;
 		final ResponseEntity<BeanApiError> error9 = testRestTemplate.postForEntity(MODULO, pedido6, BeanApiError.class);
 		System.out.println(error9);
 		Assert.assertEquals("Error creando pedido sin especificar los productos", HttpStatus.UNPROCESSABLE_ENTITY.value(), error9.getStatusCodeValue());

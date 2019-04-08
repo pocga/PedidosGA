@@ -51,7 +51,7 @@ public class AES {
 
 	/** Instancia del cifrador */
 	private static Cipher cipher;
-
+	
 
 	/**
 	 * Crea las instancias

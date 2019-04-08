@@ -27,18 +27,6 @@ public class BeanPedido implements Comparable<BeanPedido>, Serializable {
 	public BeanPedido() {
 	}
 
-	public BeanPedido(UUID idPedido, BeanUsuario usuario, List<BeanCantidadProducto> productos, String nombreDestinatario, String direccionDestinatario, String ciudadDestinatario, String telefonoDestinatario, LocalDateTime fecha, BeanTotales totales) {
-		this.idPedido = idPedido;
-		this.usuario = usuario;
-		this.productos = productos;
-		this.nombreDestinatario = nombreDestinatario;
-		this.direccionDestinatario = direccionDestinatario;
-		this.ciudadDestinatario = ciudadDestinatario;
-		this.telefonoDestinatario = telefonoDestinatario;
-		this.fecha = fecha;
-		this.totales = totales;
-	}
-
 	@Override public String toString() {
 		return "BeanPedido{" + "idPedido=" + idPedido + ", usuario=" + usuario + ", productos=" + productos + ", nombreDestinatario=" + nombreDestinatario + ", direccionDestinatario=" + direccionDestinatario + ", ciudadDestinatario=" + ciudadDestinatario + ", telefonoDestinatario=" + telefonoDestinatario + ", fecha=" + fecha + ", totales=" + totales + '}';
 	}
@@ -154,6 +142,79 @@ public class BeanPedido implements Comparable<BeanPedido>, Serializable {
 		crear.setTelefonoDestinatario(telefonoDestinatario);
 		crear.setFecha(fecha);
 		return crear;
+	}
+
+	public static class BeanPedidoBuilder {
+		
+		private UUID builderIdPedido;
+		private BeanUsuario builderUsuario;
+		private List<BeanCantidadProducto> builderProductos;
+		private String builderNombreDestinatario;
+		private String builderDireccionDestinatario;
+		private String builderCiudadDestinatario;
+		private String builderTelefonoDestinatario;
+		private LocalDateTime builderFecha;
+		private BeanTotales builderTotales;
+
+		public BeanPedidoBuilder addIdPedido(UUID builderIdPedido) {
+			this.builderIdPedido = builderIdPedido;
+			return this;
+		}
+
+		public BeanPedidoBuilder addUsuario(BeanUsuario builderUsuario) {
+			this.builderUsuario = builderUsuario;
+			return this;
+		}
+
+		public BeanPedidoBuilder addProductos(List<BeanCantidadProducto> builderProductos) {
+			this.builderProductos = builderProductos;
+			return this;
+		}
+
+		public BeanPedidoBuilder addNombreDestinatario(String builderNombreDestinatario) {
+			this.builderNombreDestinatario = builderNombreDestinatario;
+			return this;
+		}
+
+		public BeanPedidoBuilder addDireccionDestinatario(String builderDireccionDestinatario) {
+			this.builderDireccionDestinatario = builderDireccionDestinatario;
+			return this;
+		}
+
+		public BeanPedidoBuilder addCiudadDestinatario(String builderCiudadDestinatario) {
+			this.builderCiudadDestinatario = builderCiudadDestinatario;
+			return this;
+		}
+
+		public BeanPedidoBuilder addTelefonoDestinatario(String builderTelefonoDestinatario) {
+			this.builderTelefonoDestinatario = builderTelefonoDestinatario;
+			return this;
+		}
+
+		public BeanPedidoBuilder addFecha(LocalDateTime builderFecha) {
+			this.builderFecha = builderFecha;
+			return this;
+		}
+
+		public BeanPedidoBuilder addTotales(BeanTotales builderTotales) {
+			this.builderTotales = builderTotales;
+			return this;
+		}
+		
+		public BeanPedido build() {
+			final BeanPedido pedido = new BeanPedido();
+			pedido.setIdPedido(builderIdPedido);
+			pedido.setUsuario(builderUsuario);
+			pedido.setProductos(builderProductos);
+			pedido.setNombreDestinatario(builderNombreDestinatario);
+			pedido.setDireccionDestinatario(builderDireccionDestinatario);
+			pedido.setCiudadDestinatario(builderCiudadDestinatario);
+			pedido.setTelefonoDestinatario(builderTelefonoDestinatario);
+			pedido.setFecha(builderFecha);
+			pedido.setTotales(builderTotales);
+			return pedido;
+		}
+
 	}
 
 }
