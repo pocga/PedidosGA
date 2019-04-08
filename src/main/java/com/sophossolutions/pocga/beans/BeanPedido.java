@@ -24,9 +24,6 @@ public class BeanPedido implements Comparable<BeanPedido>, Serializable {
 	private LocalDateTime fecha;
 	private BeanTotales totales;
 
-	public BeanPedido() {
-	}
-
 	@Override public String toString() {
 		return "BeanPedido{" + "idPedido=" + idPedido + ", usuario=" + usuario + ", productos=" + productos + ", nombreDestinatario=" + nombreDestinatario + ", direccionDestinatario=" + direccionDestinatario + ", ciudadDestinatario=" + ciudadDestinatario + ", telefonoDestinatario=" + telefonoDestinatario + ", fecha=" + fecha + ", totales=" + totales + '}';
 	}

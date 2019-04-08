@@ -73,22 +73,23 @@ public class ServicioCorreoImpl implements ServicioCorreo {
 		}
 
 		// Plantilla
+		final String BR = "<br />";
 		final String plantilla = ""
 			+ "<html>"
-			+ "<body>"
-			+ "Hola %s,"
-			+ "<br />"
-			+ "<br />"
-			+ "%s."
-			+ "<br />"
-			+ "<br />"
-			+ "%s"
-			+ "<br />"
-			+ "<br />"
-			+ "<img src='cid:id101' />"
-			+ "</body>"
+				+ "<body>"
+					+ "Hola %s,"
+					+ BR
+					+ BR
+					+ "%s."
+					+ BR
+					+ BR
+					+ "%s"
+					+ BR
+					+ BR
+					+ "<img src='cid:id101' />"
+				+ "</body>"
 			+ "</html>"
-			+ "";
+		+ "";
 
 		try {
 			// Define el mensaje

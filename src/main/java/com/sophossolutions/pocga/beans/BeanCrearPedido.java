@@ -27,9 +27,6 @@ public class BeanCrearPedido implements Comparable<BeanCrearPedido> {
 	@Autowired
 	private ServicioProductos servicioProductos;
 	
-	public BeanCrearPedido() {
-	}
-
 	@Override public String toString() {
 		return "BeanCrearPedido{" + "idPedido=" + idPedido + ", idUsuario=" + idUsuario + ", productos=" + productos + ", nombreDestinatario=" + nombreDestinatario + ", direccionDestinatario=" + direccionDestinatario + ", ciudadDestinatario=" + ciudadDestinatario + ", telefonoDestinatario=" + telefonoDestinatario + ", fecha=" + fecha + ", servicioProductos=" + servicioProductos + '}';
 	}
