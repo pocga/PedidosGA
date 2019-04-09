@@ -32,7 +32,7 @@ public class ServicioCarritoImpl implements ServicioCarrito {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ServicioCarritoImpl.class);
 
 	private static final String PLANTILLA_PRODUCTO_NO_EXISTE = "El producto %s no está registrado en el sistema";
-	private static final String PLANTILLA_CANTIDAD_SUPERA_INVENTARIO = "Producto no disponible";
+	private static final String PLANTILLA_CANTIDAD_SUPERA_INVENTARIO = "Producto agotado";
 	private static final String PLANTILLA_CARRITO_NO_EXISTE = "No existe el carrito de compras del usuario %s";
 	private static final String PLANTILLA_PRODUCTO_NO_EN_CARRITO = "No se encontró el producto %s en el carrito del usuario %s";
 	private static final String PLANTILLA_LOGGER_ERROR_ADICIONANDO = "Error adicionando producto al carrito de '{}'. Error: {}";
@@ -46,10 +46,6 @@ public class ServicioCarritoImpl implements ServicioCarrito {
 	
 	@Autowired
 	private ServicioUsuarios servicioUsuarios;
-	
-	public ServicioCarritoImpl() {
-		
-	}
 	
 	@Override public BeanDetallesCarrito getCarrito(String idUsuario) {
 		// Consulta
