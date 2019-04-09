@@ -11,7 +11,6 @@ import com.sophossolutions.pocga.beans.BeanDetallesProducto;
 import com.sophossolutions.pocga.beans.BeanPedido;
 import com.sophossolutions.pocga.beans.BeanProducto;
 import com.sophossolutions.pocga.beans.BeanTotales;
-import com.sophossolutions.pocga.beans.BeanUsuario;
 import com.sophossolutions.pocga.model.ServicioPedidos;
 import com.sophossolutions.pocga.entity.PedidosEntity;
 import com.sophossolutions.pocga.model.ServicioCorreo;
@@ -167,7 +166,7 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 		});
 		
 		// Valida el usuario
-		final BeanUsuario usuario = servicioUsuarios.getUserByIdUsuario(pedido.getIdUsuario());
+		servicioUsuarios.getUserByIdUsuario(pedido.getIdUsuario());
 
 		// Crea la entidad
 		final PedidosEntity entity = new PedidosEntity();
@@ -200,19 +199,22 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 			LOGGER.warn("Error eliminando el carrito del usuario '{}'. Error: {}", pedido.getIdUsuario(), re.getLocalizedMessage());
 		}
 		
+		// Genera el bean
+		final BeanPedido nuevoPedido = fromEntity(newEntity);
+		
 		// Envía el correo
-		servicioCorreo.enviarConfirmacionPedido(newEntity.getIdPedido(), usuario);
+		servicioCorreo.enviarConfirmacionPedido(nuevoPedido);
 		
 		// Entrega el ID generado
-		LOGGER.info("Creación del pedido '{}' exitosa", newEntity.getIdPedido());
-		return fromEntity(newEntity);
+		LOGGER.info("Creación del pedido '{}' exitosa", nuevoPedido.getIdPedido());
+		return nuevoPedido;
 	}
 
 	@Override public void eliminarPedido(UUID idPedido) {
 		if(repository.existsById(idPedido)) {
 			final BeanPedido pedido = getPedido(idPedido);
 			repository.deleteById(idPedido);
-			servicioCorreo.enviarCancelacionPedido(idPedido, pedido.getUsuario());
+			servicioCorreo.enviarCancelacionPedido(pedido);
 			LOGGER.info("Eliminación del pedido '{}' exitosa", idPedido);
 		} else {
 			final String error = String.format(PLANTILLA_PEDIDO_NO_EXISTE, idPedido);
@@ -263,16 +265,8 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 		pedido.setProductos(servicioProductos.fromMapProductos(entity.getProductos()));
 		pedido.setFecha(entity.getFecha());
 
-		// Trae el nombre del usuario de cognito a partir del ID
-		try {
-			pedido.setUsuario(servicioUsuarios.getUserByIdUsuario(entity.getIdUsuario()));
-		} catch (Exception e) {
-			final String error = "No se pudo obtener el nombre del usuario '" + entity.getIdUsuario() + "'";
-			LOGGER.error("Error generando el pedido a partir de la entidad para el ID '{}'. Error: {}", entity.getIdPedido(), error);
-			final ErrorEntidadNoEncontrada eene = new ErrorEntidadNoEncontrada(error);
-			eene.addSuppressed(e);
-			throw eene;
-		}
+		// Trae los detalles del usuario de cognito a partir del ID
+		pedido.setUsuario(servicioUsuarios.getUserByIdUsuario(entity.getIdUsuario()));
 
 		// Descifra la información
 		try {

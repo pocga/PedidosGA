@@ -49,12 +49,6 @@ public class ServicioUsuariosImpl implements ServicioUsuarios {
 		try {
 			// Crea el bean
 			final BeanUsuario usuario = new BeanUsuario(idUsuario);
-			if(true) {
-				usuario.setEmail("eliana.aguilar@sophossolutions.com");
-				usuario.setNombres("Eliana");
-				usuario.setApellidos("Aguilar");
-				return usuario;
-			}
 
 			// Provee las credenciales
 			final AWSCredentialsProvider credentialsProvider = getAWSCredentialsProvider();
@@ -91,8 +85,8 @@ public class ServicioUsuariosImpl implements ServicioUsuarios {
 			return usuario;
 
 		} catch (RuntimeException e) {
-			final String error = "Error buscando datos en AWS Cognito -> " + e.getLocalizedMessage();
-			LOGGER.error("Error obteniendo los datos de Cognito para el usuario '{}'. Error: {}", idUsuario, error);
+			final String error = "Error buscando datos de usuario '" + idUsuario + "' en AWS Cognito. Excepción: " + e.getClass().getSimpleName() + " -> " + e.getLocalizedMessage();
+			LOGGER.error("Error obteniendo detalles del usuario '{}'. Error: {}", idUsuario, error);
 			final ErrorEntidadNoEncontrada eene = new ErrorEntidadNoEncontrada(error);
 			eene.addSuppressed(e);
 			throw eene;

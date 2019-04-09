@@ -1,5 +1,6 @@
 package com.sophossolutions.pocga.service;
 
+import com.sophossolutions.pocga.beans.BeanPedido;
 import com.sophossolutions.pocga.beans.BeanUsuario;
 import com.sophossolutions.pocga.exceptions.ErrorCreandoEntidad;
 import com.sophossolutions.pocga.model.ServicioCorreo;
@@ -33,27 +34,22 @@ public class ServicioCorreoImpl implements ServicioCorreo {
 	@Autowired
 	private JavaMailSender sender;
 	
-	/**
-	 * Procedimiento que envía el correo de confirmación del pedido
-	 * @param idPedido 
-	 * @param usuario 
-	 */
-	@Override public void enviarConfirmacionPedido(UUID idPedido, BeanUsuario usuario) {
+	@Override public void enviarConfirmacionPedido(BeanPedido pedido) {
 		enviarCorreo(
-			idPedido, 
-			usuario, 
+			pedido.getIdPedido(), 
+			pedido.getUsuario(), 
 			"Tu pedido en TechShopGA fue generado con éxito", 
-			"Este correo es para confirmar la creación exitosa de tu pedido <b>" + idPedido +"</b>", 
+			"Este correo es para confirmar la creación exitosa de tu pedido <b>" + pedido.getIdPedido() +"</b>", 
 			"¡Muchas gracias!"
 		);
 	}
 
-	@Override public void enviarCancelacionPedido(UUID idPedido, BeanUsuario usuario) {
+	@Override public void enviarCancelacionPedido(BeanPedido pedido) {
 		enviarCorreo(
-			idPedido, 
-			usuario, 
+			pedido.getIdPedido(), 
+			pedido.getUsuario(), 
 			"Tu pedido en TechShopGA fue cancelado", 
-			"Este correo es para informar la cancelación por parte del administrador de tu pedido <b>" + idPedido + "</b>", 
+			"Este correo es para informar la cancelación por parte del administrador de tu pedido <b>" + pedido.getIdPedido() + "</b>", 
 			"Saludos."
 		);
 	}
@@ -117,4 +113,5 @@ public class ServicioCorreoImpl implements ServicioCorreo {
 			throw ece;
 		}
 	}
+
 }

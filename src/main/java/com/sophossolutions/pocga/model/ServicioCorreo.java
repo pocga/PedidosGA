@@ -1,7 +1,6 @@
 package com.sophossolutions.pocga.model;
 
-import com.sophossolutions.pocga.beans.BeanUsuario;
-import java.util.UUID;
+import com.sophossolutions.pocga.beans.BeanPedido;
 
 /**
  * Servicio para enviar correos
@@ -11,16 +10,14 @@ public interface ServicioCorreo {
 
 	/**
 	 * Procedimiento que envía el correo de confirmación del pedido
-	 * @param idPedido 
-	 * @param usuario 
+	 * @param pedido 
 	 */
-	void enviarConfirmacionPedido(UUID idPedido, BeanUsuario usuario);
+	void enviarConfirmacionPedido(BeanPedido pedido);
 
 	/**
 	 * Procedimiento que envía el correo de cancelación del pedido
-	 * @param idPedido 
-	 * @param usuario 
+	 * @param pedido 
 	 */
-	void enviarCancelacionPedido(UUID idPedido, BeanUsuario usuario);
+	void enviarCancelacionPedido(BeanPedido pedido);
 
 }
