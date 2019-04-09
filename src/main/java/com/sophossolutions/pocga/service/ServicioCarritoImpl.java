@@ -47,6 +47,10 @@ public class ServicioCarritoImpl implements ServicioCarrito {
 	@Autowired
 	private ServicioUsuarios servicioUsuarios;
 	
+	public ServicioCarritoImpl() {
+		
+	}
+	
 	@Override public BeanDetallesCarrito getCarrito(String idUsuario) {
 		// Consulta
 		final Optional<CarritoEntity> optional = repository.findById(idUsuario);
@@ -132,7 +136,7 @@ public class ServicioCarritoImpl implements ServicioCarrito {
 		if(!optional.isPresent()) {
 			// Se crea el carrito
 			final CarritoEntity nuevo = new CarritoEntity(idUsuario, producto.toMap());
-			if(producto.getCantidad() > detallesProducto.getCantidadDisponible()) {
+			if(producto.getCantidad() > 0) {
 				final String error = String.format(PLANTILLA_CANTIDAD_SUPERA_INVENTARIO, producto.getCantidad(), detallesProducto.getCantidadDisponible(), producto.getIdProducto());
 				LOGGER.error(PLANTILLA_LOGGER_ERROR_ADICIONANDO, idUsuario, error);
 				throw new ErrorCreandoEntidad(error);
