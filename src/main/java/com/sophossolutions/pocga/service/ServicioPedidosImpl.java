@@ -159,7 +159,7 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 				throw new ErrorEntidadNoEncontrada(error);
 			}
 			if (bcp.getCantidad() > bdp.getCantidadDisponible()) {
-				final String error = "Producto agostado";
+				final String error = "Producto agotado";
 				LOGGER.error(PLANTILLA_LOGGER_ERROR_ADICIONANDO, pedido.getIdPedido(), error);
 				throw new ErrorCreandoEntidad(error);
 			}
