@@ -136,7 +136,7 @@ public class ServicioCarritoImpl implements ServicioCarrito {
 		if(!optional.isPresent()) {
 			// Se crea el carrito
 			final CarritoEntity nuevo = new CarritoEntity(idUsuario, producto.toMap());
-			if(producto.getCantidad() > 0) {
+			if(producto.getCantidad() > detallesProducto.getCantidadDisponible()) {
 				final String error = String.format(PLANTILLA_CANTIDAD_SUPERA_INVENTARIO, producto.getCantidad(), detallesProducto.getCantidadDisponible(), producto.getIdProducto());
 				LOGGER.error(PLANTILLA_LOGGER_ERROR_ADICIONANDO, idUsuario, error);
 				throw new ErrorCreandoEntidad(error);
