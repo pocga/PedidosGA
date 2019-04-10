@@ -7,6 +7,6 @@ import org.springframework.data.cassandra.repository.config.EnableCassandraRepos
  * @author Ricardo José Ramírez Blauvelt
  */
 @EnableCassandraRepositories(basePackages = "com.sophossolutions.pocga.repository")
-public class CassandraConfiguration {
+public class CassandraConfig {
 
 }
