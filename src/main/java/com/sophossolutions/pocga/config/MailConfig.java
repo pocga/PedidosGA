@@ -33,6 +33,9 @@ public class MailConfig {
 	@Value(("${spring.mail.password}"))
 	private String userPassword;
 	
+	@Value(("${spring.mail.mime.charset}"))
+	private String charset;
+	
 	@Value(("${spring.mail.properties.mail.transport.protocol}"))
 	private String protocol;
 	
@@ -64,6 +67,7 @@ public class MailConfig {
 
 		// Configura el sender
 		mailSender.setJavaMailProperties(mailProperties);
+		mailSender.setDefaultEncoding(charset);
 		mailSender.setHost(host);
 		mailSender.setPort(port);
 		mailSender.setProtocol(protocol);

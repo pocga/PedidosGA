@@ -8,6 +8,7 @@ spring:
         host: email-smtp.us-east-1.amazonaws.com
         username: DEZh2kkX3khf2RATqZEerCBORQ+eZ9eoR31FhrmRrIL3OT0s8oxQAL+czTQdOn41/w==
         password: DGrytSK8hF0Xs0kbUTcS/OETqSkXQlzRHd4MrkxdUN1xXIGHgdNENCjzGrHDdKPS9WeIGVCf5yu7UW8KA6SMyi4oF/MICDuaug==
+        mime.charset: utf8
         properties:
             mail:
                 transport.protocol: smtp
