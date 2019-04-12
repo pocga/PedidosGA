@@ -63,11 +63,6 @@ public class ServicioCorreoImpl implements ServicioCorreo {
 	 * @param despedida 
 	 */
 	private void enviarCorreo(UUID idPedido, BeanUsuario usuario, String asunto, String mensaje, String despedida) {
-		// No envía correos desde desarrollo
-		if (activeProfile.equals("dev")) {
-			return;
-		}
-
 		// Plantilla
 		final String BR = "<br />";
 		final String plantilla = ""
@@ -94,7 +89,11 @@ public class ServicioCorreoImpl implements ServicioCorreo {
 			// Configura el mensaje
 			final MimeMessageHelper helper = new MimeMessageHelper(message, true);
 			helper.setFrom(new InternetAddress("pedidos@techshopga.com", "Pedidos TechShopGA"));
-			helper.setTo(usuario.getEmail());
+			if(!activeProfile.equals("dev")) {
+				helper.setTo(new InternetAddress(usuario.getEmail(), (usuario.getNombres() + " " + usuario.getApellidos()).strip()));
+			} else {
+				helper.setTo(new InternetAddress("pocga@sophossolutions.com", "PoC GA"));
+			}
 			helper.setText(String.format(plantilla, usuario.getNombres(), mensaje, despedida), true);
 			helper.setSubject(asunto);
 

@@ -49,12 +49,6 @@ public class ServicioUsuariosImpl implements ServicioUsuarios {
 		try {
 			// Crea el bean
 			final BeanUsuario usuario = new BeanUsuario(idUsuario);
-			if(true) {
-				usuario.setEmail("eliana.aguilar@sophossolutions.com");
-				usuario.setNombres("Eliana");
-				usuario.setApellidos("Aguilar");
-				return usuario;
-			}
 
 			// Provee las credenciales
 			final AWSCredentialsProvider credentialsProvider = getAWSCredentialsProvider();
