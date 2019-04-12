@@ -21,6 +21,7 @@ import com.sophossolutions.pocga.utils.AES;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -180,7 +181,7 @@ public class ServicioPedidosImpl implements ServicioPedidos {
 			entity.setDireccionDestinatario(AES.cifrar(pedido.getDireccionDestinatario()));
 			entity.setCiudadDestinatario(AES.cifrar(pedido.getCiudadDestinatario()));
 			entity.setTelefonoDestinatario(AES.cifrar(pedido.getTelefonoDestinatario()));
-			entity.setFecha(pedido.getFecha() != null ? pedido.getFecha() : LocalDateTime.now());
+			entity.setFecha(pedido.getFecha() != null ? pedido.getFecha() : LocalDateTime.now(ZoneId.of("America/Bogota")));
 		} catch (InvalidAlgorithmParameterException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
 			final String error = "No se pudo cifrar la información de envío del pedido";
 			LOGGER.error("Error creando el pedido con ID '{}'. Error: {}", pedido.getIdPedido(), error);
